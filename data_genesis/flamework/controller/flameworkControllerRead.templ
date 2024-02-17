@@ -1,0 +1,8 @@
+public ModelRest crudpage(ServletEntity entity) throws Exception{
+    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        ModelRest model=new ModelRest();
+        [classNameMaj][] o=dao.select(connex, [classNameMaj].class);
+        model.addItem("data", o);
+        return model;
+    }
+}

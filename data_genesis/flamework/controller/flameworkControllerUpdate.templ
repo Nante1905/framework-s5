@@ -1,0 +1,13 @@
+public ModelRest update(ServletEntity entity) throws Exception{
+    [classNameMaj] o=new [classNameMaj]();
+    [controllerChangeInstanciation]
+    [classNameMaj] where=new [classNameMaj]();
+    [controllerWhereInstanciation]
+    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+        dao.update(connex, o, where);
+        connex.commit();
+        ModelRest model=new ModelRest();
+        model.addItem("data", "Modifié");
+        return model;
+    }
+}
