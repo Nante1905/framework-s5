@@ -20,9 +20,9 @@ public class App {
                                 HandyManUtils.getFileContent(Constantes.LANGUAGE_JSON));
                 Database database;
                 Language language;
-                String databaseName, user, pwd, host;
-                boolean useSSL, allowPublicKeyRetrieval;
-                String projectName, entityName;
+                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost";
+                boolean useSSL = false, allowPublicKeyRetrieval = true;
+                String projectName = "akanjoApi2", entityName = "*";
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile;
@@ -34,37 +34,39 @@ public class App {
                 String foreignContext;
                 String customChanges, changesFile;
                 String navLink, navLinkPath;
+                database = databases[0];
+                language = languages[0];
                 try (Scanner scanner = new Scanner(System.in)) {
-                        System.out.println("Choose a database engine:");
-                        for (int i = 0; i < databases.length; i++) {
-                                System.out.println((i + 1) + ") " + databases[i].getNom());
-                        }
-                        System.out.print("> ");
-                        database = databases[scanner.nextInt() - 1];
-                        System.out.println("Choose a framework:");
-                        for (int i = 0; i < languages.length; i++) {
-                                System.out.println((i + 1) + ") " + languages[i].getNom());
-                        }
-                        System.out.print("> ");
-                        language = languages[scanner.nextInt() - 1];
-                        System.out.println("Enter your database credentials:");
-                        System.out.print("Database name: ");
-                        databaseName = scanner.next();
-                        System.out.print("Username: ");
-                        user = scanner.next();
-                        System.out.print("Password: ");
-                        pwd = scanner.next();
-                        System.out.print("Database host: ");
-                        host = scanner.next();
-                        System.out.print("Use SSL ?(Y/n): ");
-                        useSSL = scanner.next().equalsIgnoreCase("Y");
-                        System.out.print("Allow public key retrieval ?(Y/n): ");
-                        allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
-                        System.out.println();
-                        System.out.print("Enter your project name: ");
-                        projectName = scanner.next();
-                        System.out.print("Which entities to import ?(* to select all): ");
-                        entityName = scanner.next();
+                        // System.out.println("Choose a database engine:");
+                        // for (int i = 0; i < databases.length; i++) {
+                        // System.out.println((i + 1) + ") " + databases[i].getNom());
+                        // }
+                        // System.out.print("> ");
+                        // database=databases[scanner.nextInt()-1];
+                        // System.out.println("Choose a framework:");
+                        // for (int i = 0; i < languages.length; i++) {
+                        // System.out.println((i + 1) + ") " + languages[i].getNom());
+                        // }
+                        // System.out.print("> ");
+                        // language = languages[scanner.nextInt() - 1];
+                        // System.out.println("Enter your database credentials:");
+                        // System.out.print("Database name: ");
+                        // databaseName = scanner.next();
+                        // System.out.print("Username: ");
+                        // user = scanner.next();
+                        // System.out.print("Password: ");
+                        // pwd = scanner.next();
+                        // System.out.print("Database host: ");
+                        // host = scanner.next();
+                        // System.out.print("Use SSL ?(Y/n): ");
+                        // useSSL = scanner.next().equalsIgnoreCase("Y");
+                        // System.out.print("Allow public key retrieval ?(Y/n): ");
+                        // allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
+                        // System.out.println();
+                        // System.out.print("Enter your project name: ");
+                        // projectName = scanner.next();
+                        // System.out.print("Which entities to import ?(* to select all): ");
+                        // entityName = scanner.next();
                         credentials = new Credentials(databaseName, user, pwd, host, useSSL, allowPublicKeyRetrieval);
                         project = new File(projectName);
                         project.mkdir();
@@ -89,6 +91,9 @@ public class App {
                                 projectNameTagPath = replace
                                                 .replace("[projectNameMaj]", HandyManUtils.majStart(projectName))
                                                 .replace("[projectNameMin]", HandyManUtils.minStart(projectName));
+                                if (replace.contains("xml")) {
+                                        System.out.println(projectNameTagPath);
+                                }
                                 projectNameTagContent = HandyManUtils.getFileContent(projectNameTagPath).replace(
                                                 "[projectNameMaj]",
                                                 HandyManUtils.majStart(projectName));
@@ -114,24 +119,23 @@ public class App {
                                 views = new String[entities.length];
                                 navLink = "";
                                 for (int i = 0; i < models.length; i++) {
-                                        System.out.println(entities[i].getTableName());
                                         models[i] = language.generateModel(entities[i], projectName);
                                         controllers[i] = language.generateController(entities[i], database, credentials,
                                                         projectName);
-                                        // views[i] = language.generateView(entities[i], projectName);
+                                        views[i] = language.generateView(entities[i], projectName);
                                         modelFile = language.getModel().getModelSavePath().replace("[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));
                                         controllerFile = language.getController().getControllerSavepath().replace(
                                                         "[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));
-                                        // viewFile = language.getView().getViewSavePath().replace("[projectNameMaj]",
-                                        // HandyManUtils.majStart(projectName));
-                                        // viewFile = viewFile.replace("[projectNameMin]",
-                                        // HandyManUtils.minStart(projectName));
-                                        // viewFile = viewFile.replace("[classNameMaj]",
-                                        // HandyManUtils.majStart(entities[i].getClassName()));
-                                        // viewFile = viewFile.replace("[classNameMin]",
-                                        // HandyManUtils.minStart(entities[i].getClassName()));
+                                        viewFile = language.getView().getViewSavePath().replace("[projectNameMaj]",
+                                                        HandyManUtils.majStart(projectName));
+                                        viewFile = viewFile.replace("[projectNameMin]",
+                                                        HandyManUtils.minStart(projectName));
+                                        viewFile = viewFile.replace("[classNameMaj]",
+                                                        HandyManUtils.majStart(entities[i].getClassName()));
+                                        viewFile = viewFile.replace("[classNameMin]",
+                                                        HandyManUtils.minStart(entities[i].getClassName()));
                                         modelFile = modelFile.replace("[projectNameMin]",
                                                         HandyManUtils.minStart(projectName));
                                         controllerFile = controllerFile.replace("[projectNameMin]",
@@ -141,10 +145,10 @@ public class App {
                                         controllerFile += "/" + HandyManUtils.majStart(entities[i].getClassName())
                                                         + language.getController().getControllerNameSuffix() + "."
                                                         + language.getController().getControllerExtension();
-                                        // viewFile += "/" + language.getView().getViewName() + "."
-                                        // + language.getView().getViewExtension();
-                                        // viewFile = viewFile.replace("[classNameMin]",
-                                        // HandyManUtils.minStart(entities[i].getClassName()));
+                                        viewFile += "/" + language.getView().getViewName() + "."
+                                                        + language.getView().getViewExtension();
+                                        viewFile = viewFile.replace("[classNameMin]",
+                                                        HandyManUtils.minStart(entities[i].getClassName()));
                                         HandyManUtils.createFile(modelFile);
                                         for (CustomFile f : language.getModel().getModelAdditionnalFiles()) {
                                                 foreignContext = "";
@@ -187,10 +191,10 @@ public class App {
                                                 HandyManUtils.overwriteFileContent(customFile, customFileContent);
                                         }
                                         HandyManUtils.createFile(controllerFile);
-                                        // HandyManUtils.createFile(viewFile);
+                                        HandyManUtils.createFile(viewFile);
                                         HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                         HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
-                                        // HandyManUtils.overwriteFileContent(viewFile, views[i]);
+                                        HandyManUtils.overwriteFileContent(viewFile, views[i]);
                                         navLink += language.getNavbarLinks().getLink();
                                         navLink = navLink.replace("[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));

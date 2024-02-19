@@ -9,5 +9,8 @@ jar -cvf ../web/WEB-INF/lib/[projectNameMaj].jar *
 
 xcopy "*" "../web/WEB-INF/classes" /E /Y /I
 
+cd ../lib
+xcopy "*" "../web/WEB-INF/lib" /E /Y /I
+
 cd ../web
-jar -cvf "%tomcatPath%/[projectNameMaj].war" *
+jar -cvf %tomcatPath%/[projectNameMaj].war *
