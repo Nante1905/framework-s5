@@ -1,6 +1,5 @@
 package genesis;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import handyman.HandyManUtils;
@@ -123,7 +122,7 @@ public class Language {
         this.view = view;
     }
 
-    public String generateModel(Entity entity, String projectName) throws IOException, Exception {
+    public String generateModel(Entity entity, String projectName) throws Throwable {
         String content = HandyManUtils.getFileContent(
                 Constantes.DATA_PATH + "/" + getModel().getModelTemplate() + "." + Constantes.MODEL_TEMPLATE_EXT);
         content = content.replace("[namespace]", getSyntax().get("namespace"));
@@ -188,7 +187,7 @@ public class Language {
     }
 
     public String generateController(Entity entity, Database database, Credentials credentials, String projectName)
-            throws IOException, Exception {
+            throws Throwable {
         String content = HandyManUtils.getFileContent(Constantes.DATA_PATH + "/"
                 + getController().getControllerTemplate() + "." + Constantes.CONTROLLER_TEMPLATE_EXT);
         content = content.replace("[namespace]", getSyntax().get("namespace"));
@@ -358,7 +357,7 @@ public class Language {
         return content;
     }
 
-    public String generateView(Entity entity, String projectName) throws IOException, Exception {
+    public String generateView(Entity entity, String projectName) throws Throwable {
         String content = HandyManUtils.getFileContent(
                 Constantes.DATA_PATH + "/" + getView().getViewContent() + "." + Constantes.VIEW_TEMPLATE_EXT);
         String foreignList = "";

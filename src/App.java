@@ -13,7 +13,7 @@ import genesis.Language;
 import handyman.HandyManUtils;
 
 public class App {
-        public static void main(String[] args) throws Exception {
+        public static void main(String[] args) throws Throwable {
                 Database[] databases = HandyManUtils.fromJson(Database[].class,
                                 HandyManUtils.getFileContent(Constantes.DATABASE_JSON));
                 Language[] languages = HandyManUtils.fromJson(Language[].class,
@@ -22,7 +22,7 @@ public class App {
                 Language language;
                 String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
-                String projectName = "akanjoApi2", entityName = "*";
+                String projectName = "akanjoApiv2", entityName = "*";
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile;
