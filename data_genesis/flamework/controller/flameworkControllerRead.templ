@@ -1,8 +1,19 @@
-public ModelRest crudpage(ServletEntity entity) throws Exception{
+public ModelRest crudpage(ServletEntity entity){
+    ModelRest model=new ModelRest();
     try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
-        ModelRest model=new ModelRest();
         [classNameMaj][] o=dao.select(connex, [classNameMaj].class);
         model.addItem("data", o);
+        return model;
+    } catch (Exception e) {
+        e.printStackTrace();
+        if (e instanceof PSQLException) {
+            System.out.println("ERREUR SQL ========");
+            model.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addItem("err", "Erreur du serveur : probleme de récupération de donnee");
+        } else {
+            model.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addItem("err", "Erreur interne du serveur");
+        }
         return model;
     }
 }
