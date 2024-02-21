@@ -1,13 +1,24 @@
-public ModelRest update(ServletEntity entity) throws Exception{
+public ModelRest update(ServletEntity entity) {
     [classNameMaj] o=new [classNameMaj]();
     [controllerChangeInstanciation]
     [classNameMaj] where=new [classNameMaj]();
+    ModelRest model=new ModelRest();
     [controllerWhereInstanciation]
     try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
         dao.update(connex, o, where);
         connex.commit();
-        ModelRest model=new ModelRest();
         model.addItem("data", "Modifié");
+        return model;
+    } catch (Exception e) {
+        e.printStackTrace();
+        if (e instanceof PSQLException) {
+            System.out.println("ERREUR SQL ========");
+            model.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addItem("err", "Erreur du serveur : probleme de contrainte de donnee");
+        } else {
+            model.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addItem("err", "Erreur interne du serveur");
+        }
         return model;
     }
 }

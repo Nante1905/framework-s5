@@ -67,7 +67,9 @@
         "import veda.godao.DAO;",
         "import veda.godao.utils.DAOConnexion;",
         "import java.sql.Connection;",
-        "import [projectNameMin].entities.[classNameMaj];"
+        "import [projectNameMin].entities.[classNameMaj];",
+        "import jakarta.servlet.http.HttpServletResponse;",
+        "import org.postgresql.util.PSQLException;"
       ],
       "controllerAnnotations": ["@Controller", "@Singleton"],
       "controllerExtends": "",
@@ -162,4 +164,3 @@
     }
   }
 ]
-
