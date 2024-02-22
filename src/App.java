@@ -118,99 +118,137 @@ public class App {
                                 controllers = new String[entities.length];
                                 views = new String[entities.length];
                                 navLink = "";
-                                for (int i = 0; i < models.length; i++) {
-                                        models[i] = language.generateModel(entities[i], projectName);
-                                        controllers[i] = language.generateController(entities[i], database, credentials,
-                                                        projectName);
-                                        views[i] = language.generateView(entities[i], projectName);
-                                        modelFile = language.getModel().getModelSavePath().replace("[projectNameMaj]",
-                                                        HandyManUtils.majStart(projectName));
-                                        controllerFile = language.getController().getControllerSavepath().replace(
-                                                        "[projectNameMaj]",
-                                                        HandyManUtils.majStart(projectName));
-                                        viewFile = language.getView().getViewSavePath().replace("[projectNameMaj]",
-                                                        HandyManUtils.majStart(projectName));
-                                        viewFile = viewFile.replace("[projectNameMin]",
-                                                        HandyManUtils.minStart(projectName));
-                                        viewFile = viewFile.replace("[classNameMaj]",
-                                                        HandyManUtils.majStart(entities[i].getClassName()));
-                                        viewFile = viewFile.replace("[classNameMin]",
-                                                        HandyManUtils.minStart(entities[i].getClassName()));
-                                        modelFile = modelFile.replace("[projectNameMin]",
-                                                        HandyManUtils.minStart(projectName));
-                                        controllerFile = controllerFile.replace("[projectNameMin]",
-                                                        HandyManUtils.minStart(projectName));
-                                        modelFile += "/" + HandyManUtils.majStart(entities[i].getClassName()) + "."
-                                                        + language.getModel().getModelExtension();
-                                        controllerFile += "/" + HandyManUtils.majStart(entities[i].getClassName())
-                                                        + language.getController().getControllerNameSuffix() + "."
-                                                        + language.getController().getControllerExtension();
-                                        viewFile += "/" + language.getView().getViewName() + "."
-                                                        + language.getView().getViewExtension();
-                                        viewFile = viewFile.replace("[classNameMin]",
-                                                        HandyManUtils.minStart(entities[i].getClassName()));
-                                        HandyManUtils.createFile(modelFile);
-                                        for (CustomFile f : language.getModel().getModelAdditionnalFiles()) {
-                                                foreignContext = "";
-                                                for (EntityField ef : entities[i].getFields()) {
-                                                        if (ef.isForeign()) {
-                                                                foreignContext += language.getModel()
-                                                                                .getModelForeignContextAttr();
-                                                                foreignContext = foreignContext.replace(
-                                                                                "[classNameMaj]",
-                                                                                HandyManUtils.majStart(ef.getType()));
-                                                        }
-                                                }
-                                                customFile = f.getName().replace("[classNameMaj]",
-                                                                HandyManUtils.majStart(entities[i].getClassName()));
-                                                customFile = language.getModel().getModelSavePath().replace(
-                                                                "[projectNameMaj]",
-                                                                HandyManUtils.majStart(projectName)) + "/" + customFile;
-                                                customFile = customFile.replace("[projectNameMin]",
-                                                                HandyManUtils.minStart(projectName));
-                                                customFileContent = HandyManUtils
-                                                                .getFileContent(Constantes.DATA_PATH + "/"
-                                                                                + f.getContent())
-                                                                .replace("[classNameMaj]", HandyManUtils
-                                                                                .majStart(entities[i].getClassName()));
-                                                customFileContent = customFileContent.replace("[projectNameMin]",
-                                                                HandyManUtils.minStart(projectName));
-                                                customFileContent = customFileContent.replace("[projectNameMaj]",
-                                                                HandyManUtils.majStart(projectName));
-                                                customFileContent = customFileContent.replace("[databaseHost]",
-                                                                credentials.getHost());
-                                                customFileContent = customFileContent.replace("[databaseName]",
-                                                                credentials.getDatabaseName());
-                                                customFileContent = customFileContent.replace("[user]",
-                                                                credentials.getUser());
-                                                customFileContent = customFileContent.replace("[pwd]",
-                                                                credentials.getPwd());
-                                                customFileContent = customFileContent
-                                                                .replace("[modelForeignContextAttr]", foreignContext);
-                                                HandyManUtils.createFile(customFile);
-                                                HandyManUtils.overwriteFileContent(customFile, customFileContent);
+                                try (Scanner sc = new Scanner(System.in)) {
+                                        System.out.println("How do you want to set label for the Foreign Keys ?");
+                                        System.out.println(
+                                                        "1) Set per entity: getLabel() method will be created and you will choose its return value during code generation");
+                                        System.out.println(
+                                                        "2) Use the first String field in entity: getLabel() method will be created and will return the value of the first field that is a String.");
+                                        System.out.println(
+                                                        "3) Set later: getLabel() method will be created in each entity and must be implemented or removed.");
+                                        int labelChoice = sc.nextInt();
+                                        while (labelChoice != Constantes.LABEL_FIRST_STRING
+                                                        && labelChoice != Constantes.LABEL_PER_ENTITY
+                                                        && labelChoice != Constantes.SET_LABEL_LATER) {
+                                                System.out.println("Please choose number from the options.");
+                                                System.out.print("> ");
+                                                labelChoice = sc.nextInt();
                                         }
-                                        HandyManUtils.createFile(controllerFile);
-                                        HandyManUtils.createFile(viewFile);
-                                        HandyManUtils.overwriteFileContent(modelFile, models[i]);
-                                        HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
-                                        HandyManUtils.overwriteFileContent(viewFile, views[i]);
-                                        navLink += language.getNavbarLinks().getLink();
-                                        navLink = navLink.replace("[projectNameMaj]",
-                                                        HandyManUtils.majStart(projectName));
-                                        navLink = navLink.replace("[projectNameMin]",
-                                                        HandyManUtils.minStart(projectName));
-                                        navLink = navLink.replace("[classNameMin]",
-                                                        HandyManUtils.minStart(entities[i].getClassName()));
-                                        navLink = navLink.replace("[classNameMaj]",
-                                                        HandyManUtils.majStart(entities[i].getClassName()));
-                                        navLink = navLink.replace("[classNameformattedMin]",
-                                                        HandyManUtils.minStart(HandyManUtils
-                                                                        .formatReadable(entities[i].getClassName())));
-                                        navLink = navLink.replace("[classNameformattedMaj]",
-                                                        HandyManUtils.majStart(HandyManUtils
-                                                                        .formatReadable(entities[i].getClassName())));
+                                        for (int i = 0; i < models.length; i++) {
+                                                models[i] = language.generateModel(entities[i], projectName, sc,
+                                                                labelChoice);
+                                                controllers[i] = language.generateController(entities[i], database,
+                                                                credentials,
+                                                                projectName);
+                                                views[i] = language.generateView(entities[i], projectName);
+                                                modelFile = language.getModel().getModelSavePath().replace(
+                                                                "[projectNameMaj]",
+                                                                HandyManUtils.majStart(projectName));
+                                                controllerFile = language.getController().getControllerSavepath()
+                                                                .replace(
+                                                                                "[projectNameMaj]",
+                                                                                HandyManUtils.majStart(projectName));
+                                                viewFile = language.getView().getViewSavePath().replace(
+                                                                "[projectNameMaj]",
+                                                                HandyManUtils.majStart(projectName));
+                                                viewFile = viewFile.replace("[projectNameMin]",
+                                                                HandyManUtils.minStart(projectName));
+                                                viewFile = viewFile.replace("[classNameMaj]",
+                                                                HandyManUtils.majStart(entities[i].getClassName()));
+                                                viewFile = viewFile.replace("[classNameMin]",
+                                                                HandyManUtils.minStart(entities[i].getClassName()));
+                                                modelFile = modelFile.replace("[projectNameMin]",
+                                                                HandyManUtils.minStart(projectName));
+                                                controllerFile = controllerFile.replace("[projectNameMin]",
+                                                                HandyManUtils.minStart(projectName));
+                                                modelFile += "/" + HandyManUtils.majStart(entities[i].getClassName())
+                                                                + "."
+                                                                + language.getModel().getModelExtension();
+                                                controllerFile += "/"
+                                                                + HandyManUtils.majStart(entities[i].getClassName())
+                                                                + language.getController().getControllerNameSuffix()
+                                                                + "."
+                                                                + language.getController().getControllerExtension();
+                                                viewFile += "/" + language.getView().getViewName() + "."
+                                                                + language.getView().getViewExtension();
+                                                viewFile = viewFile.replace("[classNameMin]",
+                                                                HandyManUtils.minStart(entities[i].getClassName()));
+                                                HandyManUtils.createFile(modelFile);
+                                                for (CustomFile f : language.getModel().getModelAdditionnalFiles()) {
+                                                        foreignContext = "";
+                                                        for (EntityField ef : entities[i].getFields()) {
+                                                                if (ef.isForeign()) {
+                                                                        foreignContext += language.getModel()
+                                                                                        .getModelForeignContextAttr();
+                                                                        foreignContext = foreignContext.replace(
+                                                                                        "[classNameMaj]",
+                                                                                        HandyManUtils.majStart(
+                                                                                                        ef.getType()));
+                                                                }
+                                                        }
+                                                        customFile = f.getName().replace("[classNameMaj]",
+                                                                        HandyManUtils.majStart(
+                                                                                        entities[i].getClassName()));
+                                                        customFile = language.getModel().getModelSavePath().replace(
+                                                                        "[projectNameMaj]",
+                                                                        HandyManUtils.majStart(projectName)) + "/"
+                                                                        + customFile;
+                                                        customFile = customFile.replace("[projectNameMin]",
+                                                                        HandyManUtils.minStart(projectName));
+                                                        customFileContent = HandyManUtils
+                                                                        .getFileContent(Constantes.DATA_PATH + "/"
+                                                                                        + f.getContent())
+                                                                        .replace("[classNameMaj]", HandyManUtils
+                                                                                        .majStart(entities[i]
+                                                                                                        .getClassName()));
+                                                        customFileContent = customFileContent.replace(
+                                                                        "[projectNameMin]",
+                                                                        HandyManUtils.minStart(projectName));
+                                                        customFileContent = customFileContent.replace(
+                                                                        "[projectNameMaj]",
+                                                                        HandyManUtils.majStart(projectName));
+                                                        customFileContent = customFileContent.replace("[databaseHost]",
+                                                                        credentials.getHost());
+                                                        customFileContent = customFileContent.replace("[databaseName]",
+                                                                        credentials.getDatabaseName());
+                                                        customFileContent = customFileContent.replace("[user]",
+                                                                        credentials.getUser());
+                                                        customFileContent = customFileContent.replace("[pwd]",
+                                                                        credentials.getPwd());
+                                                        customFileContent = customFileContent
+                                                                        .replace("[modelForeignContextAttr]",
+                                                                                        foreignContext);
+                                                        HandyManUtils.createFile(customFile);
+                                                        HandyManUtils.overwriteFileContent(customFile,
+                                                                        customFileContent);
+                                                }
+                                                HandyManUtils.createFile(controllerFile);
+                                                HandyManUtils.createFile(viewFile);
+                                                HandyManUtils.overwriteFileContent(modelFile, models[i]);
+                                                HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
+                                                HandyManUtils.overwriteFileContent(viewFile, views[i]);
+                                                navLink += language.getNavbarLinks().getLink();
+                                                navLink = navLink.replace("[projectNameMaj]",
+                                                                HandyManUtils.majStart(projectName));
+                                                navLink = navLink.replace("[projectNameMin]",
+                                                                HandyManUtils.minStart(projectName));
+                                                navLink = navLink.replace("[classNameMin]",
+                                                                HandyManUtils.minStart(entities[i].getClassName()));
+                                                navLink = navLink.replace("[classNameMaj]",
+                                                                HandyManUtils.majStart(entities[i].getClassName()));
+                                                navLink = navLink.replace("[classNameformattedMin]",
+                                                                HandyManUtils.minStart(HandyManUtils
+                                                                                .formatReadable(entities[i]
+                                                                                                .getClassName())));
+                                                navLink = navLink.replace("[classNameformattedMaj]",
+                                                                HandyManUtils.majStart(HandyManUtils
+                                                                                .formatReadable(entities[i]
+                                                                                                .getClassName())));
+                                        }
+                                } catch (Exception e) {
+                                        e.printStackTrace();
                                 }
+
                                 navLinkPath = language.getNavbarLinks().getPath().replace("[projectNameMaj]",
                                                 HandyManUtils.majStart(projectName));
                                 navLinkPath = navLinkPath.replace("[projectNameMin]",

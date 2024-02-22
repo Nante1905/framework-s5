@@ -2,6 +2,7 @@
   {
     "id": 1,
     "nom": "Java Flamework",
+    "exception": "throws Exception",
     "syntax": {
       "namespace": "package",
       "namespaceStart": ";",
@@ -54,7 +55,11 @@
       "modelAdditionnalFiles": [],
       "modelExtension": "java",
       "modelPackage": "[projectNameMin].entities",
-      "modelTemplate": "ModelTemplate"
+      "modelTemplate": "ModelTemplate",
+      "fkLabel": {
+        "labelMethod": "return get[fieldNameMaj]();",
+        "defaultLabelMethod": "throw new Exception(\"Unimplemented method getLabel\");"
+      }
     },
     "controller": {
       "controllerImports": [
