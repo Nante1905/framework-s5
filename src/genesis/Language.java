@@ -1,6 +1,9 @@
 package genesis;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 import handyman.HandyManUtils;
 
@@ -17,6 +20,7 @@ public class Language {
     private View view;
     private CustomChanges[] customChanges;
     private NavbarLink navbarLinks;
+    private String exception;
 
     public NavbarLink getNavbarLinks() {
         return navbarLinks;
@@ -122,7 +126,8 @@ public class Language {
         this.view = view;
     }
 
-    public String generateModel(Entity entity, String projectName) throws Throwable {
+    public String generateModel(Entity entity, String projectName, Scanner sc, int labelChoice) throws Throwable {
+        System.out.println("Generating model for " + entity.getTableName());
         String content = HandyManUtils.getFileContent(
                 Constantes.DATA_PATH + "/" + getModel().getModelTemplate() + "." + Constantes.MODEL_TEMPLATE_EXT);
         content = content.replace("[namespace]", getSyntax().get("namespace"));
@@ -142,10 +147,12 @@ public class Language {
         content = content.replace("[extends]", getModel().getModelExtends());
         String constructors = "";
         for (String c : getModel().getModelConstructors()) {
-            constructors += c + "\n";
+            constructors += "\t" + c + "\n";
         }
         content = content.replace("[constructors]", constructors);
-        String fields = "", fieldAnnotes;
+        String fields = "", fieldAnnotes, fieldAccessors = "";
+        List<EntityField> nonFkFields = new ArrayList<EntityField>();
+        EntityField firstStringField = null;
         for (int i = 0; i < entity.getFields().length; i++) {
             fieldAnnotes = "";
             if (entity.getFields()[i].isPrimary()) {
@@ -154,7 +161,7 @@ public class Language {
                 }
             } else if (entity.getFields()[i].isForeign()) {
                 for (String forAnnote : getModel().getModelForeignFieldAnnotations()) {
-                    fieldAnnotes += forAnnote + "\n";
+                    fieldAnnotes += "\t" + forAnnote + "\n";
                     fieldAnnotes = fieldAnnotes.replace("[referencedFieldNameMin]",
                             HandyManUtils.minStart(entity.getFields()[i].getReferencedField()));
                     fieldAnnotes = fieldAnnotes.replace("[referencedFieldNameMaj]",
@@ -162,19 +169,37 @@ public class Language {
                 }
             }
             for (String fa : getModel().getModelFieldAnnotations()) {
-                fieldAnnotes += fa + "\n";
+                fieldAnnotes += "\t" + fa + "\n";
             }
             fields += fieldAnnotes;
-            fields += getModel().getModelFieldContent() + "\n";
-            fields += getModel().getModelGetter() + "\n";
-            fields += getModel().getModelSetter() + "\n";
+            fields += "\t" + getModel().getModelFieldContent() + "\n";
+            fieldAccessors += "\t" + getModel().getModelSetter() + "\n\t" + getModel().getModelGetter() + "\n";
             fields = fields.replace("[columnName]", entity.getColumns()[i].getName());
             fields = fields.replace("[fieldType]", entity.getFields()[i].getType());
             fields = fields.replace("[modelFieldCase]", getModel().getModelFieldCase());
             fields = fields.replace("[fieldNameMin]", HandyManUtils.minStart(entity.getFields()[i].getName()));
             fields = fields.replace("[fieldNameMaj]", HandyManUtils.majStart(entity.getFields()[i].getName()));
+            fieldAccessors = fieldAccessors.replace("[columnName]", entity.getColumns()[i].getName());
+            fieldAccessors = fieldAccessors.replace("[fieldType]", entity.getFields()[i].getType());
+            fieldAccessors = fieldAccessors.replace("[modelFieldCase]", getModel().getModelFieldCase());
+            fieldAccessors = fieldAccessors.replace("[fieldNameMin]",
+                    HandyManUtils.minStart(entity.getFields()[i].getName()));
+            fieldAccessors = fieldAccessors.replace("[fieldNameMaj]",
+                    HandyManUtils.majStart(entity.getFields()[i].getName()));
+
+            if (entity.getFields()[i].isForeign() == false) {
+                if (labelChoice == Constantes.LABEL_PER_ENTITY) {
+                    nonFkFields.add(entity.getFields()[i]);
+                }
+                System.out.println(entity.getFields()[i].getType());
+                if (labelChoice == Constantes.LABEL_FIRST_STRING
+                        && entity.getFields()[i].getType().equals("String") && firstStringField == null) {
+                    firstStringField = entity.getFields()[i];
+                }
+            }
         }
         content = content.replace("[fields]", fields);
+        content = content.replace("[accessors]", fieldAccessors);
         content = content.replace("[projectNameMin]", HandyManUtils.minStart(projectName));
         content = content.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
         content = content.replace("[classNameMaj]", HandyManUtils.majStart(entity.getClassName()));
@@ -183,6 +208,68 @@ public class Language {
         content = content.replace("[primaryFieldNameMin]", HandyManUtils.minStart(entity.getPrimaryField().getName()));
         content = content.replace("[primaryFieldNameMaj]", HandyManUtils.majStart(entity.getPrimaryField().getName()));
         content = content.replace("[tableName]", entity.getTableName());
+        // generate getLabel for Foreign Key
+        content = generateGetLabel(labelChoice, entity, nonFkFields, firstStringField, content, sc);
+        // replace extra whiteSpace
+        // String regex = "(\n{2,})";
+
+        // content = content.replaceAll(regex, "\n\n");
+        return content;
+    }
+
+    public String generateGetLabel(int labelChoice, Entity entity, List<EntityField> nonFkFields,
+            EntityField firstStringField, String content, Scanner sc) throws Exception {
+        if (labelChoice == Constantes.LABEL_PER_ENTITY) {
+            System.out.println("Choose field to use as label if " + HandyManUtils.majStart(entity.getTableName())
+                    + " is foreign table: ");
+            int i = 0;
+            for (i = 0; i < nonFkFields.size(); i++) {
+                System.out.println(i + 1 + ") " + nonFkFields.get(i).getName());
+            }
+            System.out.println(i + 1 + ") " + "Set later");
+            System.out.print("> ");
+            int choice = sc.nextInt() - 1;
+            sc.nextLine();
+            while (choice <= 0 || choice > i + 1) {
+                System.out.println("Choose a number from the options please");
+                System.out.print("> ");
+                choice = sc.nextInt() - 1;
+            }
+            if (choice < nonFkFields.size()) {
+                System.out.println(nonFkFields.get(choice).getName() + " will be used as label.");
+                content = content.replace("[exception]", "");
+                content = content.replace("[labelMethod]",
+                        getModel().getFkLabel().getLabelMethod());
+                content = content.replace("[fieldNameMaj]",
+                        HandyManUtils.majStart(nonFkFields.get(choice).getName()));
+            } else {
+                System.out.println("getLabel will throw Exception and must be implemented later or removed.");
+                content = content.replace("[exception]", getException());
+                content = content.replace("[labelMethod]",
+                        getModel().getFkLabel().getDefaultLabelMethod());
+            }
+        } else if (labelChoice == Constantes.LABEL_FIRST_STRING) {
+            if (firstStringField != null) {
+                content = content.replace("[exception]", "");
+                content = content.replace("[labelMethod]",
+                        getModel().getFkLabel().getLabelMethod());
+                content = content.replace("[fieldNameMaj]",
+                        HandyManUtils.majStart(firstStringField.getName()));
+            } else {
+                System.out.println(entity.getTableName()
+                        + " has no non-fk-field with String type. getLabel will throw Exception and must be implemented later or removed.");
+                content = content.replace("[exception]", getException());
+                content = content.replace("[labelMethod]",
+                        getModel().getFkLabel().getDefaultLabelMethod());
+            }
+        } else if (labelChoice == Constantes.SET_LABEL_LATER) {
+            System.out.println("getLabel will throw Exception and must be implemented later or removed.");
+            content = content.replace("[exception]", getException());
+            content = content.replace("[labelMethod]",
+                    getModel().getFkLabel().getDefaultLabelMethod());
+        } else {
+            throw new Exception("Unknown label set choice");
+        }
         return content;
     }
 
@@ -431,5 +518,13 @@ public class Language {
         content = content.replace("[primaryNameMaj]", HandyManUtils.majStart(entity.getPrimaryField().getName()));
         content = content.replace("[primaryNameMin]", HandyManUtils.minStart(entity.getPrimaryField().getName()));
         return content;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
     }
 }

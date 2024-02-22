@@ -1,7 +1,6 @@
 public ModelRest crudpage(ServletEntity entity){
     ModelRest model=new ModelRest();
     try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
-        ModelRest model=new ModelRest();
         if(entity.getData().get("[primaryNameMin]") != null) {
             [classNameMaj] where=new [classNameMaj]();
             [controllerWhereInstanciation]
