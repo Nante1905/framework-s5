@@ -1,7 +1,7 @@
 package genesis;
 
 public class Credentials {
-    private String databaseName, user, pwd, host;
+    private String sgbd, driver, databaseName, user, pwd, host, port;
     private boolean useSSL, allowPublicKeyRetrieval;
 
     public String getDatabaseName() {
@@ -52,14 +52,39 @@ public class Credentials {
         this.allowPublicKeyRetrieval = allowPublicKeyRetrieval;
     }
 
-    public Credentials(String databaseName, String user, String pwd, String host, boolean useSSL,
+    public Credentials(String databaseName, String user, String pwd, String host, String port, boolean useSSL,
             boolean allowPublicKeyRetrieval) {
-        this.databaseName = databaseName;
-        this.user = user;
-        this.pwd = pwd;
-        this.host = host;
-        this.useSSL = useSSL;
-        this.allowPublicKeyRetrieval = allowPublicKeyRetrieval;
+        setDatabaseName(databaseName);
+        setUser(user);
+        setPwd(pwd);
+        setHost(host);
+        setPort(port);
+        setUseSSL(useSSL);
+        setAllowPublicKeyRetrieval(allowPublicKeyRetrieval);
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getSgbd() {
+        return sgbd;
+    }
+
+    public void setSgbd(String sgbd) {
+        this.sgbd = sgbd;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
     }
 
 }

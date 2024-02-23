@@ -1,6 +1,7 @@
 public ModelRest crudpage(ServletEntity entity){
+    DatabaseInfo d = DatabaseInfo.getInstance(null);
     ModelRest model=new ModelRest();
-    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+    try(Connection connex = DAOConnexion.getConnexion(d.getDriver(), d.getSgbd(), d.getHost(), d.getPort(), d.getDatabaseName(), d.getUser(), d.getPwd(), d.isUseSSL(), d.isAllowPublicKeyRetrieval())){
         if(entity.getData().get("[primaryNameMin]") != null) {
             [classNameMaj] where=new [classNameMaj]();
             [controllerWhereInstanciation]

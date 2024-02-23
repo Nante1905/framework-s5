@@ -415,15 +415,17 @@ public class Language {
             methods = methods.replace("[primaryNameMaj]", HandyManUtils.majStart(entity.getPrimaryField().getName()));
             methods = methods.replace("[primaryType]", entity.getPrimaryField().getType());
             methods = methods.replace("[primaryNameMin]", HandyManUtils.minStart(entity.getPrimaryField().getName()));
-            methods = methods.replace("[databaseDriver]", database.getDriver());
-            methods = methods.replace("[databaseSgbd]", database.getNom());
-            methods = methods.replace("[databaseHost]", credentials.getHost());
-            methods = methods.replace("[databasePort]", database.getPort());
-            methods = methods.replace("[databaseName]", credentials.getDatabaseName());
-            methods = methods.replace("[user]", credentials.getUser());
-            methods = methods.replace("[pwd]", credentials.getPwd());
-            methods = methods.replace("[databaseUseSSL]", String.valueOf(credentials.isUseSSL()));
-            methods = methods.replace("[databaseAllowKey]", String.valueOf(credentials.isAllowPublicKeyRetrieval()));
+            // methods = methods.replace("[databaseDriver]", database.getDriver());
+            // methods = methods.replace("[databaseSgbd]", database.getNom());
+            // methods = methods.replace("[databaseHost]", credentials.getHost());
+            // methods = methods.replace("[databasePort]", database.getPort());
+            // methods = methods.replace("[databaseName]", credentials.getDatabaseName());
+            // methods = methods.replace("[user]", credentials.getUser());
+            // methods = methods.replace("[pwd]", credentials.getPwd());
+            // methods = methods.replace("[databaseUseSSL]",
+            // String.valueOf(credentials.isUseSSL()));
+            // methods = methods.replace("[databaseAllowKey]",
+            // String.valueOf(credentials.isAllowPublicKeyRetrieval()));
         }
         content = content.replace("[methods]", methods);
         content = content.replace("[controllerNameMaj]", getController().getControllerName());

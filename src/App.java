@@ -20,7 +20,7 @@ public class App {
                                 HandyManUtils.getFileContent(Constantes.LANGUAGE_JSON));
                 Database database;
                 Language language;
-                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost";
+                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
                 String projectName = "akanjoApiv2", entityName = "*";
                 Credentials credentials;
@@ -42,7 +42,7 @@ public class App {
                         // System.out.println((i + 1) + ") " + databases[i].getNom());
                         // }
                         // System.out.print("> ");
-                        // database=databases[scanner.nextInt()-1];
+                        // database = databases[scanner.nextInt() - 1];
                         // System.out.println("Choose a framework:");
                         // for (int i = 0; i < languages.length; i++) {
                         // System.out.println((i + 1) + ") " + languages[i].getNom());
@@ -58,6 +58,8 @@ public class App {
                         // pwd = scanner.next();
                         // System.out.print("Database host: ");
                         // host = scanner.next();
+                        // System.out.print("Database port: ");
+                        // host = scanner.next();
                         // System.out.print("Use SSL ?(Y/n): ");
                         // useSSL = scanner.next().equalsIgnoreCase("Y");
                         // System.out.print("Allow public key retrieval ?(Y/n): ");
@@ -67,7 +69,10 @@ public class App {
                         // projectName = scanner.next();
                         // System.out.print("Which entities to import ?(* to select all): ");
                         // entityName = scanner.next();
-                        credentials = new Credentials(databaseName, user, pwd, host, useSSL, allowPublicKeyRetrieval);
+                        credentials = new Credentials(databaseName, user, pwd, host, port, useSSL,
+                                        allowPublicKeyRetrieval);
+                        credentials.setSgbd(database.getNom());
+                        credentials.setDriver(database.getDriver());
                         project = new File(projectName);
                         project.mkdir();
                         for (CustomFile c : language.getAdditionnalFiles()) {
@@ -100,7 +105,7 @@ public class App {
                                 projectNameTagContent = projectNameTagContent.replace("[databaseHost]",
                                                 credentials.getHost());
                                 projectNameTagContent = projectNameTagContent.replace("[databasePort]",
-                                                database.getPort());
+                                                credentials.getPort());
                                 projectNameTagContent = projectNameTagContent.replace("[databaseName]",
                                                 credentials.getDatabaseName());
                                 projectNameTagContent = projectNameTagContent.replace("[user]", credentials.getUser());
@@ -126,6 +131,7 @@ public class App {
                                                         "2) Use the first String field in entity: getLabel() method will be created and will return the value of the first field that is a String.");
                                         System.out.println(
                                                         "3) Set later: getLabel() method will be created in each entity and must be implemented or removed.");
+                                        System.out.print("> ");
                                         int labelChoice = sc.nextInt();
                                         while (labelChoice != Constantes.LABEL_FIRST_STRING
                                                         && labelChoice != Constantes.LABEL_PER_ENTITY

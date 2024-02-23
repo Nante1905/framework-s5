@@ -1,8 +1,9 @@
 public ModelRest delete(ServletEntity entity){
     [classNameMaj] where=new [classNameMaj]();
     [controllerWhereInstanciation]
+    DatabaseInfo d = DatabaseInfo.getInstance(null);
     ModelRest model=new ModelRest();
-    try(Connection connex=DAOConnexion.getConnexion("[databaseDriver]", "[databaseSgbd]", "[databaseHost]", "[databasePort]", "[databaseName]", "[user]", "[pwd]", [databaseUseSSL], [databaseAllowKey])){
+    try(Connection connex = DAOConnexion.getConnexion(d.getDriver(), d.getSgbd(), d.getHost(), d.getPort(), d.getDatabaseName(), d.getUser(), d.getPwd(), d.isUseSSL(), d.isAllowPublicKeyRetrieval())){
         dao.delete(connex, where);
         connex.commit();
         model.addItem("data", "Supprimé");
