@@ -1,1 +1,2 @@
-format mba atao milailay amlay Model
+-format mba atao milailay amlay Controller
+-ilay App tsy atao test tsony
