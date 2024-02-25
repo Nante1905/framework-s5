@@ -15,6 +15,15 @@ import handyman.HandyManUtils;
  */
 public class FrontGeneration {
 
+    public static Matcher extractPartTemplate(String startKey, String endKey, String content) throws Exception {
+        Pattern p = Pattern.compile(startKey + "(.*?)" + endKey, Pattern.DOTALL);
+        Matcher m = p.matcher(content);
+        while (m.find()) {
+            return m;
+        }
+        throw new Exception("Nothing is between the startKey and endKey");
+    }
+
     // ilay import type mbola mila jerena
     // atao manokana angamba: mampiasa ImportVariable.getImportTemplate("member")
     public static String generateImport(FrontLangage langage, PageImport[] toImports) throws Throwable {

@@ -1,6 +1,10 @@
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 import genesis.Constantes;
 import genesis.Credentials;
@@ -10,7 +14,10 @@ import genesis.Database;
 import genesis.Entity;
 import genesis.EntityField;
 import genesis.Language;
+import genesis.frontend.FrontGeneration;
 import genesis.frontend.variables.FrontLangage;
+import genesis.frontend.variables.FrontPage;
+import genesis.frontend.variables.PageImport;
 import handyman.HandyManUtils;
 
 public class App {
@@ -38,7 +45,9 @@ public class App {
                 String foreignContext;
                 String customChanges, changesFile;
                 String navLink, navLinkPath;
+                String pageInfoContent = "";
                 String projectApiName, projectFrontName;
+                List<PageImport> pageInfoImports;
                 database = databases[0];
                 language = languages[0];
                 try (Scanner scanner = new Scanner(System.in)) {
@@ -178,6 +187,19 @@ public class App {
                                                 System.out.print("> ");
                                                 labelChoice = sc.nextInt();
                                         }
+
+                                        // FRONT: generate PageINfo for menu and routing
+                                        FrontPage pageInfo = frontLangage.getPages().get("pageInfo");
+                                        pageInfoImports = new ArrayList<>(Arrays.asList(pageInfo.getImports()));
+                                        // mbola mila amboarina ny import sy variable
+                                        String pageInfoTemplate = HandyManUtils.getFileContent(
+                                                        Constantes.FRONT_TEMPLATE_DIR + "/" + pageInfo.getTemplate());
+                                        Matcher templateMatcher = FrontGeneration.extractPartTemplate("&&pageInfo&&",
+                                                        "&&endPageInfo&&", pageInfoTemplate);
+                                        // représente une page
+                                        String menuItemTemplate = templateMatcher.group(1);
+                                        menuItemTemplate = menuItemTemplate.substring(1, menuItemTemplate.length() - 1);
+
                                         for (int i = 0; i < models.length; i++) {
                                                 models[i] = language.generateModel(entities[i], projectName, sc,
                                                                 labelChoice);
@@ -275,24 +297,64 @@ public class App {
                                                 HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                                 HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
                                                 // HandyManUtils.overwriteFileContent(viewFile, views[i]);
-                                                navLink += language.getNavbarLinks().getLink();
-                                                navLink = navLink.replace("[projectNameMaj]",
-                                                                HandyManUtils.majStart(projectName));
-                                                navLink = navLink.replace("[projectNameMin]",
-                                                                HandyManUtils.minStart(projectName));
-                                                navLink = navLink.replace("[classNameMin]",
-                                                                HandyManUtils.minStart(entities[i].getClassName()));
-                                                navLink = navLink.replace("[classNameMaj]",
-                                                                HandyManUtils.majStart(entities[i].getClassName()));
-                                                navLink = navLink.replace("[classNameformattedMin]",
-                                                                HandyManUtils.minStart(HandyManUtils
-                                                                                .formatReadable(entities[i]
-                                                                                                .getClassName())));
-                                                navLink = navLink.replace("[classNameformattedMaj]",
-                                                                HandyManUtils.majStart(HandyManUtils
-                                                                                .formatReadable(entities[i]
-                                                                                                .getClassName())));
+                                                // navLink += language.getNavbarLinks().getLink();
+                                                // navLink = navLink.replace("[projectNameMaj]",
+                                                // HandyManUtils.majStart(projectName));
+                                                // navLink = navLink.replace("[projectNameMin]",
+                                                // HandyManUtils.minStart(projectName));
+                                                // navLink = navLink.replace("[classNameMin]",
+                                                // HandyManUtils.minStart(entities[i].getClassName()));
+                                                // navLink = navLink.replace("[classNameMaj]",
+                                                // HandyManUtils.majStart(entities[i].getClassName()));
+                                                // navLink = navLink.replace("[classNameformattedMin]",
+                                                // HandyManUtils.minStart(HandyManUtils
+                                                // .formatReadable(entities[i]
+                                                // .getClassName())));
+                                                // navLink = navLink.replace("[classNameformattedMaj]",
+                                                // HandyManUtils.majStart(HandyManUtils
+                                                // .formatReadable(entities[i]
+                                                // .getClassName())));
+
+                                                // PageInfo Content
+                                                // TODO: ahoana ty path tyh tyh XD
+                                                pageInfoImports.add(new PageImport("single",
+                                                                List.of(HandyManUtils
+                                                                                .majStart(entities[i].getClassName())
+                                                                                + "Liste"),
+                                                                "../../" + frontLangage.getFolders().get("liste")
+                                                                                .replace("[entityMin]", HandyManUtils
+                                                                                                .minStart(entities[i]
+                                                                                                                .getClassName()))));
+                                                if (i > 0) {
+                                                        pageInfoContent += ",\n";
+                                                }
+                                                pageInfoContent += menuItemTemplate
+                                                                .replace("[entityMin]",
+                                                                                HandyManUtils.minStart(entities[i]
+                                                                                                .getClassName()))
+                                                                .replace("[entityMaj]", HandyManUtils
+                                                                                .majStart(entities[i].getClassName()));
                                         }
+
+                                        // generate PageInfo.tsx
+                                        pageInfoTemplate = pageInfoTemplate.replace(templateMatcher.group(),
+                                                        pageInfoContent);
+                                        pageInfoTemplate = pageInfoTemplate
+                                                        .replace("[exportKey]",
+                                                                        frontLangage.getVariables().getExportKey())
+                                                        .replace("[endLine]", frontLangage.getVariables().getEndLine());
+                                        pageInfo.setImports(pageInfoImports.toArray(new PageImport[0]));
+
+                                        // IMPORT
+                                        String pageInfoImportContent = FrontGeneration.generateImport(frontLangage,
+                                                        pageInfo.getImports());
+                                        pageInfoTemplate = pageInfoTemplate.replace("<import>", pageInfoImportContent);
+                                        pageInfo.setPath(projectName, projectFrontName, null,
+                                                        frontLangage.getExtension());
+                                        System.out.println(pageInfo.getPath());
+                                        HandyManUtils.createFile(pageInfo.getPath());
+                                        HandyManUtils.overwriteFileContent(pageInfo.getPath(), pageInfoTemplate);
+
                                 } catch (Exception e) {
                                         e.printStackTrace();
                                 }

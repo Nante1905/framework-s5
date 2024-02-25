@@ -6,6 +6,7 @@
     "skeleton": "ionic-react-skeleton",
     "variables": {
       "endLine": ";",
+      "exportKey": "export",
       "imports": {
         "member": {
           "importKey": "import",
@@ -27,9 +28,31 @@
         }
       }
     },
+    "folders": {
+      "liste": "components/[entityMin]/[entityMin]-liste.component",
+      "form": "components/[entityMin]/[entityMin]-form.component"
+    },
     "pages": {
+      "pageInfo": {
+        "name": "PageInfo",
+        "path": "[projectName]/[projectFrontName]/src/shared/data/PageInfo",
+        "template": "pageinfo-template.templ",
+        "imports": [
+          {
+            "type": "member",
+            "elements": ["archiveSharp"],
+            "source": "ionicons/icons"
+          },
+          {
+            "type": "member",
+            "elements": ["PageInfo"],
+            "source": "../types/PageInfo"
+          }
+        ]
+      },
       "menu": {
         "name": "Menu",
+        "path": "[projectName]/[projectFrontName]/src/components",
         "imports": [
           {
             "type": "member",
@@ -62,7 +85,8 @@
         ]
       },
       "form": {
-        "name": "[entity]-form",
+        "name": "[entity]-form.component",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form",
         "imports": [
           {
             "type": "member",
@@ -106,6 +130,81 @@
             "type": "member",
             "elements": ["URL_API"],
             "source": "../../shared/env/env"
+          }
+        ]
+      },
+      "list": {
+        "name": "[entity]-liste.component",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste",
+        "imports": [
+          {
+            "type": "member",
+            "elements": [
+              "Button",
+              "CircularProgress",
+              "Dialog",
+              "DialogContent",
+              "Table",
+              "TableBody",
+              "TableCell",
+              "TableHead",
+              "TableRow",
+              "Tooltip"
+            ],
+            "source": "@mui/material"
+          },
+          {
+            "type": "single",
+            "elements": ["axios"],
+            "source": "axios"
+          },
+          {
+            "type": "single",
+            "elements": ["_"],
+            "source": "lodash"
+          },
+          {
+            "type": "single",
+            "elements": ["qs"],
+            "source": "qs"
+          },
+          {
+            "type": "member",
+            "elements": ["useEffect", "useState"],
+            "source": "react"
+          },
+          {
+            "type": "single",
+            "elements": ["ErrorSnackBar"],
+            "source": "../../shared/components/snackbar/ErrorSnackBar"
+          },
+          {
+            "type": "single",
+            "elements": ["SuccessSnackBar"],
+            "source": "../../shared/components/snackbar/SuccessSnackBar"
+          },
+          {
+            "type": "single",
+            "elements": ["DeleteModal"],
+            "source": "../../shared/components/deleteModal/delete-modal.component"
+          },
+          {
+            "type": "member",
+            "elements": ["URL_API"],
+            "source": "../../shared/env/env"
+          },
+          {
+            "type": "global",
+            "source": "../../theme/form.scss"
+          },
+          {
+            "type": "global",
+            "source": "../../theme/list.scss"
+          },
+          {
+            "type": "single",
+            "elements": ["[entityMaj]Form"],
+            "source": "./[entityMin]-form.component"
           }
         ]
       }
