@@ -9,7 +9,7 @@ import genesis.frontend.variables.FrontPage;
 import genesis.frontend.variables.PageImport;
 import handyman.HandyManUtils;
 
-public class Test {
+public class TestImport {
     public static void main(String[] args) throws Throwable {
         String json = HandyManUtils.getFileContent(Constantes.DATA_PATH + "/front-languages.json");
         FrontLangage[] f = HandyManUtils.fromJson(FrontLangage[].class, json);

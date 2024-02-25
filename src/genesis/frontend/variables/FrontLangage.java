@@ -4,6 +4,7 @@ public class FrontLangage {
     int id;
     String name;
     String extension;
+    String skeleton;
     FrontVariable variables;
     FrontPage[] pages;
 
@@ -45,6 +46,14 @@ public class FrontLangage {
 
     public void setPages(FrontPage[] pages) {
         this.pages = pages;
+    }
+
+    public String getSkeleton() {
+        return skeleton;
+    }
+
+    public void setSkeleton(String skeleton) {
+        this.skeleton = skeleton;
     }
 
 }

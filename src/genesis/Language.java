@@ -191,7 +191,6 @@ public class Language {
                 if (labelChoice == Constantes.LABEL_PER_ENTITY) {
                     nonFkFields.add(entity.getFields()[i]);
                 }
-                System.out.println(entity.getFields()[i].getType());
                 if (labelChoice == Constantes.LABEL_FIRST_STRING
                         && entity.getFields()[i].getType().equals("String") && firstStringField == null) {
                     firstStringField = entity.getFields()[i];
