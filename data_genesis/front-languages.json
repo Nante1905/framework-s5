@@ -27,8 +27,8 @@
         }
       }
     },
-    "pages": [
-      {
+    "pages": {
+      "menu": {
         "name": "Menu",
         "imports": [
           {
@@ -61,7 +61,7 @@
           }
         ]
       },
-      {
+      "form": {
         "name": "[entity]-form",
         "imports": [
           {
@@ -109,6 +109,6 @@
           }
         ]
       }
-    ]
+    }
   }
 ]

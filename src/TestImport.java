@@ -16,16 +16,16 @@ public class TestImport {
         FrontLangage react = f[0];
         String imports = "";
 
-        for (FrontPage page : react.getPages()) {
-            System.out.println("====== " + page.getName() + "=================");
-            if (page.getName().contains("form")) {
-                List<PageImport> i = new ArrayList<>(Arrays.asList(page.getImports()));
-                PageImport tmp = new PageImport("member", List.of("Produit"), "../../shared/types/Produit");
-                i.add(tmp);
-                page.setImports(i.toArray(new PageImport[0]));
-            }
-            imports = FrontGeneration.generateImport(react, page.getImports());
-            System.out.println(imports);
+        FrontPage page = react.getPages().get("menu");
+        System.out.println("====== " + page.getName() + "=================");
+        if (page.getName().contains("form")) {
+            List<PageImport> i = new ArrayList<>(Arrays.asList(page.getImports()));
+            PageImport tmp = new PageImport("member", List.of("Produit"), "../../shared/types/Produit");
+            i.add(tmp);
+            page.setImports(i.toArray(new PageImport[0]));
         }
+        imports = FrontGeneration.generateImport(react, page.getImports());
+        System.out.println(imports);
+
     }
 }

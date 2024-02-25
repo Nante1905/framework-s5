@@ -1,12 +1,14 @@
 package genesis.frontend.variables;
 
+import java.util.HashMap;
+
 public class FrontLangage {
     int id;
     String name;
     String extension;
     String skeleton;
     FrontVariable variables;
-    FrontPage[] pages;
+    HashMap<String, FrontPage> pages;
 
     public int getId() {
         return id;
@@ -40,20 +42,20 @@ public class FrontLangage {
         this.variables = variables;
     }
 
-    public FrontPage[] getPages() {
-        return pages;
-    }
-
-    public void setPages(FrontPage[] pages) {
-        this.pages = pages;
-    }
-
     public String getSkeleton() {
         return skeleton;
     }
 
     public void setSkeleton(String skeleton) {
         this.skeleton = skeleton;
+    }
+
+    public HashMap<String, FrontPage> getPages() {
+        return pages;
+    }
+
+    public void setPages(HashMap<String, FrontPage> pages) {
+        this.pages = pages;
     }
 
 }
