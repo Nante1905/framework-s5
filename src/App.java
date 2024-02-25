@@ -22,7 +22,7 @@ public class App {
                 Language language;
                 String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
-                String projectName = "akanjoApiv2", entityName = "*";
+                String projectName = "akanjoApiv2", entityName = "produit";
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile;
@@ -65,14 +65,19 @@ public class App {
                         // System.out.print("Allow public key retrieval ?(Y/n): ");
                         // allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
                         // System.out.println();
-                        // System.out.print("Enter your project name: ");
-                        // projectName = scanner.next();
-                        // System.out.print("Which entities to import ?(* to select all): ");
-                        // entityName = scanner.next();
                         credentials = new Credentials(databaseName, user, pwd, host, port, useSSL,
                                         allowPublicKeyRetrieval);
                         credentials.setSgbd(database.getNom());
                         credentials.setDriver(database.getDriver());
+                        // try (Connection connect = database.getConnexion(credentials)) {
+                        // System.out.println("Test database connection");
+                        // } catch (Exception e) {
+                        // System.out.println("Cannot establish connection with the database.");
+                        // }
+                        // System.out.print("Enter your project name: ");
+                        // projectName = scanner.next();
+                        // System.out.print("Which entities to import ?(* to select all): ");
+                        // entityName = scanner.next();
                         project = new File(projectName);
                         project.mkdir();
                         for (CustomFile c : language.getAdditionnalFiles()) {

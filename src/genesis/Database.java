@@ -16,6 +16,7 @@ public class Database {
     private HashMap<String, String> types;
     private String getcolumnsQuery;
     private String gettablesQuery;
+    private String singleTableQuery;
 
     public int getId() {
         return id;
@@ -92,7 +93,12 @@ public class Database {
             connect = getConnexion(credentials);
             opened = true;
         }
-        String query = getGettablesQuery().replace("[databaseName]", credentials.getDatabaseName());
+        String query;
+        if (entityName.equals("*")) {
+            query = getGettablesQuery().replace("[databaseName]", credentials.getDatabaseName());
+        } else {
+            query = getSingleTableQuery().replace("[tableName]", entityName);
+        }
         PreparedStatement statement = connect.prepareStatement(query);
         try {
             Vector<Entity> liste = new Vector<>();
@@ -115,5 +121,13 @@ public class Database {
                 connect.close();
             }
         }
+    }
+
+    public String getSingleTableQuery() {
+        return singleTableQuery;
+    }
+
+    public void setSingleTableQuery(String singleTableQuery) {
+        this.singleTableQuery = singleTableQuery;
     }
 }

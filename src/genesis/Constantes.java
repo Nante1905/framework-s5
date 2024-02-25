@@ -12,5 +12,5 @@ public class Constantes {
     public static final int LABEL_PER_ENTITY = 1;
     public static final int LABEL_FIRST_STRING = 2;
     public static final int SET_LABEL_LATER = 3;
-
+    public static final String FRONT_TEMPLATE_DIR = "react-template";
 }

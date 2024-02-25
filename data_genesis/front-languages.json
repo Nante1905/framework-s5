@@ -1,0 +1,113 @@
+[
+  {
+    "id": 1,
+    "name": "Ionic React",
+    "extension": "tsx",
+    "variables": {
+      "endLine": ";",
+      "imports": {
+        "member": {
+          "importKey": "import",
+          "importStart": "{",
+          "importEnd": "}",
+          "importFrom": "from"
+        },
+        "global": {
+          "importKey": "import",
+          "importStart": "",
+          "importEnd": "",
+          "importFrom": ""
+        },
+        "single": {
+          "importKey": "import",
+          "importStart": "",
+          "importEnd": "",
+          "importFrom": "from"
+        }
+      }
+    },
+    "pages": [
+      {
+        "name": "Menu",
+        "imports": [
+          {
+            "type": "member",
+            "elements": [
+              "IonContent",
+              "IonIcon",
+              "IonItem",
+              "IonLabel",
+              "IonList",
+              "IonListHeader",
+              "IonMenu",
+              "IonMenuToggle"
+            ],
+            "source": "@ionic/react"
+          },
+          {
+            "type": "member",
+            "elements": ["archiveSharp"],
+            "source": "ionicons/icons"
+          },
+          {
+            "type": "member",
+            "elements": ["useLocation"],
+            "source": "react-router-dom"
+          },
+          {
+            "type": "global",
+            "source": "./Menu.css"
+          }
+        ]
+      },
+      {
+        "name": "[entity]-form",
+        "imports": [
+          {
+            "type": "member",
+            "elements": [
+              "Button",
+              "CircularProgress",
+              "FormControl",
+              "InputLabel",
+              "MenuItem",
+              "Select",
+              "TextField"
+            ],
+            "source": "@mui/material"
+          },
+          {
+            "type": "single",
+            "elements": ["axios"],
+            "source": "axios"
+          },
+          {
+            "type": "single",
+            "elements": ["qs"],
+            "source": "qs"
+          },
+          {
+            "type": "member",
+            "elements": ["FormEvent", "useEffect", "useState"],
+            "source": "react"
+          },
+          {
+            "type": "single",
+            "elements": ["ErrorSnackBar"],
+            "source": "../../shared/components/snackbar/ErrorSnackBar"
+          },
+          {
+            "type": "single",
+            "elements": ["SuccessSnackBar"],
+            "source": "../../shared/components/snackbar/SuccessSnackBar"
+          },
+          {
+            "type": "member",
+            "elements": ["URL_API"],
+            "source": "../../shared/env/env"
+          }
+        ]
+      }
+    ]
+  }
+]
