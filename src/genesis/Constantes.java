@@ -14,4 +14,7 @@ public class Constantes {
     public static final int LABEL_FIRST_STRING = 2;
     public static final int SET_LABEL_LATER = 3;
     public static final String FRONT_TEMPLATE_DIR = "react-template";
+    public static final String FRONT_TEMPLATE_FORM = FRONT_TEMPLATE_DIR + "/form-template.templ";
+    public static final String FRONT_TEMPLATE_FK = FRONT_TEMPLATE_FORM + "/form-foreignKey-getter-template";
+
 }

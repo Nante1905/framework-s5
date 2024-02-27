@@ -1,0 +1,55 @@
+<div className="form-input">
+    &&input&&
+    <TextField label="[inputLabel]" {...register("[inputLabel]")} />
+    &&endInput&&
+    &&inputNumeric&&
+    <TextField label="[inputLabel]" type="number" {...register("[inputLabel]")} />
+    &&endInputNumeric&&
+    &&select&&
+    {state.loading ? (
+        <CircularProgress />
+    ) : (
+            <FormControl sx={{ width: 200 }}>
+              <InputLabel id="demo-simple-select-label">[inputLabel]</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="[inputLabel]"
+                {...register("[inputLabel]")}
+                defaultValue={
+                  formState.defaultValues?.["[entityFkField]"]?.["[entityFkFieldPk]"]
+                }
+              >
+                {state.marque?.map((e: Marque, i) => (
+                  <MenuItem key={`fk${i}`} value={e?.[entityFkFieldPk]}>
+                    {e.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+        )}
+    &&endSelect&&
+    &&date&&
+    <FormControl>
+        <LocalizationProvider
+          dateAdapter={AdapterDayjs}
+          adapterLocale="fr"
+        >
+            <Controller
+              {...register("[inputLabel]")}
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  label={"[inputLabel]"}
+                  format="DD/MM/YYYY"
+                  onChange={(event: any) => {
+                    onChange(event?.format("YYYY-MM-DD") as string);
+                  }}
+                  value={value}
+                />
+              )}
+            />
+        </LocalizationProvider>
+    </FormControl>
+    &&endDate&&
+</div>

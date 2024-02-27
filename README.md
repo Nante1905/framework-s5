@@ -11,3 +11,4 @@
 
 - gestion import amlay form satria dynamique
   -mnu koa mila ovaina ilay nom app
+  - mila ovaina jackson json lay gson (anaty toJson handyman) fa tsy haiko mampiditra jar an'ilay jackson anaty jar an'ilay handyman ref buildena lay izy

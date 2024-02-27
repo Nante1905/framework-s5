@@ -153,6 +153,11 @@
             "type": "member",
             "elements": ["URL_API"],
             "source": "../../shared/env/env"
+          },
+          {
+            "type": "member",
+            "elements": ["useForm"],
+            "source": "react-hook-form"
           }
         ]
       },
