@@ -7,6 +7,14 @@ public class PageImport {
     List<String> elements;
     String source;
 
+    public void addElement(List<String> newElements) {
+        for (String nE : newElements) {
+            if (elements.contains(nE) == false) {
+                elements.add(nE);
+            }
+        }
+    }
+
     public PageImport(String type, List<String> elements, String source) {
         setType(type);
         setElements(elements);

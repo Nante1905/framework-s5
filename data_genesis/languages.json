@@ -24,10 +24,8 @@
     },
     "skeleton": "flamework_skeleton",
     "projectNameTags": [
-      "[projectNameMaj]/web/pages/layout/layout.jsp",
-      "[projectNameMaj]/web/WEB-INF/web.xml",
-      "[projectNameMaj]/web/index.jsp",
-      "[projectNameMaj]/execute.bat"
+      "[projectNameMaj]/[projectApiName]/web/WEB-INF/web.xml",
+      "[projectNameMaj]/[projectApiName]/execute.bat"
     ],
     "additionnalFiles": [],
     "model": {
@@ -51,7 +49,7 @@
         "public [classNameMaj](){}",
         "public [classNameMaj]([primaryFieldType] o){ [primaryFieldName[modelFieldCase]]=o; }"
       ],
-      "modelSavePath": "[projectNameMaj]/src/[projectNameMin]/entities",
+      "modelSavePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/entities",
       "modelAdditionnalFiles": [],
       "modelExtension": "java",
       "modelPackage": "[projectNameMin].entities",
@@ -131,7 +129,7 @@
           "controllerMethodContent": "flamework/controller/flameworkControllerDelete"
         }
       ],
-      "controllerSavepath": "[projectNameMaj]/src/[projectNameMin]/controllers",
+      "controllerSavepath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/controllers",
       "controllerExtension": "java",
       "controllerPackage": "[projectNameMin].controllers",
       "controllerTemplate": "ControllerTemplate",
@@ -160,12 +158,12 @@
       },
       "viewName": "[classNameMin]",
       "viewContent": "flamework/view/flameworkView",
-      "viewSavePath": "[projectNameMaj]/web/pages",
+      "viewSavePath": "[projectNameMaj]/[projectApiName]/web/pages",
       "viewExtension": "jsp"
     },
     "customChanges": [],
     "navbarLinks": {
-      "path": "[projectNameMaj]/web/pages/layout/layout.jsp",
+      "path": "[projectNameMaj]/[projectApiName]/web/pages/layout/layout.jsp",
       "link": "<a href=\"/[projectNameMaj]/tocrud[classNameMin].do\" class=\"nav-item nav-link\"><i class=\"fa fa-tachometer-alt me-2\"></i>[classNameformattedMaj]</a>"
     }
   }

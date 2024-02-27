@@ -1,6 +1,7 @@
 package genesis.frontend;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +16,28 @@ import handyman.HandyManUtils;
  */
 public class FrontGeneration {
 
+    public static void rewriteEnv(FrontLangage langage, String projectName, String projectFrontName) throws Throwable {
+        String envPath = projectName + "/" + projectFrontName + "/" + langage.getFiles().get("env")
+                .replace("[projectName]", projectName)
+                .replace("[projectFrontName]", projectFrontName);
+        System.out.println(envPath);
+        String content = HandyManUtils.getFileContent(envPath);
+        content = content.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
+        HandyManUtils.overwriteFileContent(envPath, content);
+    }
+
+    public static Matcher extractPartTemplate(String startKey, String endKey, String content) throws Exception {
+        Pattern p = Pattern.compile(startKey + "(.*?)" + endKey, Pattern.DOTALL);
+        Matcher m = p.matcher(content);
+        while (m.find()) {
+            return m;
+        }
+        throw new Exception("Nothing is between the startKey and endKey");
+    }
+
     // ilay import type mbola mila jerena
     // atao manokana angamba: mampiasa ImportVariable.getImportTemplate("member")
-    public static String generateImport(FrontLangage langage, PageImport[] toImports) throws Throwable {
+    public static String generateImport(FrontLangage langage, List<PageImport> toImports) throws Throwable {
         String content = "";
         String template = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_DIR + "/import-template.templ");
         Pattern pattern;

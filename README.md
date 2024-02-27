@@ -6,4 +6,8 @@
   \_ ohatra hoe ampiana <import> eo amlay template pour indiquer hoe mila manao génération import XD
   \_mampiasa FrontGeneration.generateImport
   \_ilay import type mila atao manuel:
+
   - ampiana an'ilay type anaty PageImport[] zay vao antsoina ilay generateImport
+
+- gestion import amlay form satria dynamique
+  -mnu koa mila ovaina ilay nom app

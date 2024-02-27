@@ -3,6 +3,7 @@ package genesis;
 public class Constantes {
     public static final String DATABASE_JSON = "data_genesis/databases.json";
     public static final String LANGUAGE_JSON = "data_genesis/languages.json";
+    public static final String FRONT_LANGUAGE_JSON = "data_genesis/front-languages.json";
     public static final String DATA_PATH = "data_genesis";
     public static final String SKELETON_EXTENSION = "zip";
     public static final String CREDENTIAL_FILE = "credentials.json";

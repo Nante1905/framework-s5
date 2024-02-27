@@ -3,8 +3,10 @@
     "id": 1,
     "name": "Ionic React",
     "extension": "tsx",
+    "skeleton": "ionic-react-skeleton",
     "variables": {
       "endLine": ";",
+      "exportKey": "export",
       "imports": {
         "member": {
           "importKey": "import",
@@ -26,9 +28,62 @@
         }
       }
     },
-    "pages": [
-      {
+    "folders": {
+      "liste": "components/[entityMin]/[entityMin]-liste.component",
+      "form": "components/[entityMin]/[entityMin]-form.component"
+    },
+    "files": {
+      "env": "src/shared/env/env.ts"
+    },
+    "optionalImports": {
+      "textField": [
+        {
+          "type": "member",
+          "elements": ["TextField"],
+          "source": "@mui/material"
+        }
+      ],
+      "select": [
+        {
+          "type": "member",
+          "elements": ["Select", "InputLabel", "MenuItem"],
+          "source": "@mui/material"
+        }
+      ],
+      "date": [
+        {
+          "type": "member",
+          "elements": ["DatePicker", "LocalizationProvider"],
+          "source": "@mui/x-date-pickers"
+        },
+        {
+          "type": "single",
+          "elements": ["AdapterDayjs"],
+          "source": "@mui/x-date-pickers/AdapterDayjs"
+        }
+      ]
+    },
+    "pages": {
+      "pageInfo": {
+        "name": "PageInfo",
+        "path": "[projectName]/[projectFrontName]/src/shared/data/PageInfo",
+        "template": "pageinfo-template.templ",
+        "imports": [
+          {
+            "type": "member",
+            "elements": ["archiveSharp"],
+            "source": "ionicons/icons"
+          },
+          {
+            "type": "member",
+            "elements": ["PageInfo"],
+            "source": "../types/PageInfo"
+          }
+        ]
+      },
+      "menu": {
         "name": "Menu",
+        "path": "[projectName]/[projectFrontName]/src/components",
         "imports": [
           {
             "type": "member",
@@ -60,20 +115,13 @@
           }
         ]
       },
-      {
-        "name": "[entity]-form",
+      "form": {
+        "name": "[entity]-form.component",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form",
         "imports": [
           {
             "type": "member",
-            "elements": [
-              "Button",
-              "CircularProgress",
-              "FormControl",
-              "InputLabel",
-              "MenuItem",
-              "Select",
-              "TextField"
-            ],
+            "elements": ["Button", "CircularProgress", "FormControl"],
             "source": "@mui/material"
           },
           {
@@ -107,7 +155,82 @@
             "source": "../../shared/env/env"
           }
         ]
+      },
+      "list": {
+        "name": "[entity]-liste.component",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste",
+        "imports": [
+          {
+            "type": "member",
+            "elements": [
+              "Button",
+              "CircularProgress",
+              "Dialog",
+              "DialogContent",
+              "Table",
+              "TableBody",
+              "TableCell",
+              "TableHead",
+              "TableRow",
+              "Tooltip"
+            ],
+            "source": "@mui/material"
+          },
+          {
+            "type": "single",
+            "elements": ["axios"],
+            "source": "axios"
+          },
+          {
+            "type": "single",
+            "elements": ["_"],
+            "source": "lodash"
+          },
+          {
+            "type": "single",
+            "elements": ["qs"],
+            "source": "qs"
+          },
+          {
+            "type": "member",
+            "elements": ["useEffect", "useState"],
+            "source": "react"
+          },
+          {
+            "type": "single",
+            "elements": ["ErrorSnackBar"],
+            "source": "../../shared/components/snackbar/ErrorSnackBar"
+          },
+          {
+            "type": "single",
+            "elements": ["SuccessSnackBar"],
+            "source": "../../shared/components/snackbar/SuccessSnackBar"
+          },
+          {
+            "type": "single",
+            "elements": ["DeleteModal"],
+            "source": "../../shared/components/deleteModal/delete-modal.component"
+          },
+          {
+            "type": "member",
+            "elements": ["URL_API"],
+            "source": "../../shared/env/env"
+          },
+          {
+            "type": "global",
+            "source": "../../theme/form.scss"
+          },
+          {
+            "type": "global",
+            "source": "../../theme/list.scss"
+          },
+          {
+            "type": "single",
+            "elements": ["[entityMaj]Form"],
+            "source": "./[entityMin]-form.component"
+          }
+        ]
       }
-    ]
+    }
   }
 ]
