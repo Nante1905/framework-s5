@@ -31,9 +31,9 @@ public class App {
                 Database database;
                 Language language;
                 FrontLangage frontLangage;
-                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
+                String databaseName = "poketra", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
-                String projectName = "akanjov2", entityName = "*";
+                String projectName = "poketrav2", entityName = "*";
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile, apiProject, frontProject;
@@ -358,6 +358,9 @@ public class App {
                                 } catch (Exception e) {
                                         e.printStackTrace();
                                 }
+
+                                // ENV
+                                FrontGeneration.rewriteEnv(frontLangage, projectName, projectFrontName);
 
                                 navLinkPath = language.getNavbarLinks().getPath().replace("[projectNameMaj]",
                                                 HandyManUtils.majStart(projectName))

@@ -15,6 +15,16 @@ import handyman.HandyManUtils;
  */
 public class FrontGeneration {
 
+    public static void rewriteEnv(FrontLangage langage, String projectName, String projectFrontName) throws Throwable {
+        String envPath = projectName + "/" + projectFrontName + "/" + langage.getFiles().get("env")
+                .replace("[projectName]", projectName)
+                .replace("[projectFrontName]", projectFrontName);
+        System.out.println(envPath);
+        String content = HandyManUtils.getFileContent(envPath);
+        content = content.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
+        HandyManUtils.overwriteFileContent(envPath, content);
+    }
+
     public static Matcher extractPartTemplate(String startKey, String endKey, String content) throws Exception {
         Pattern p = Pattern.compile(startKey + "(.*?)" + endKey, Pattern.DOTALL);
         Matcher m = p.matcher(content);

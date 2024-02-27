@@ -32,6 +32,9 @@
       "liste": "components/[entityMin]/[entityMin]-liste.component",
       "form": "components/[entityMin]/[entityMin]-form.component"
     },
+    "files": {
+      "env": "src/shared/env/env.ts"
+    },
     "pages": {
       "pageInfo": {
         "name": "PageInfo",

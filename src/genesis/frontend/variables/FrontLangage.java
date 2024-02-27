@@ -10,6 +10,7 @@ public class FrontLangage {
     FrontVariable variables;
     HashMap<String, FrontPage> pages;
     HashMap<String, String> folders;
+    HashMap<String, String> files;
 
     public int getId() {
         return id;
@@ -65,6 +66,14 @@ public class FrontLangage {
 
     public void setFolders(HashMap<String, String> folders) {
         this.folders = folders;
+    }
+
+    public HashMap<String, String> getFiles() {
+        return files;
+    }
+
+    public void setFiles(HashMap<String, String> files) {
+        this.files = files;
     }
 
 }
