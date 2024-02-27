@@ -35,6 +35,34 @@
     "files": {
       "env": "src/shared/env/env.ts"
     },
+    "optionalImports": {
+      "textField": [
+        {
+          "type": "member",
+          "elements": ["TextField"],
+          "source": "@mui/material"
+        }
+      ],
+      "select": [
+        {
+          "type": "member",
+          "elements": ["Select", "InputLabel", "MenuItem"],
+          "source": "@mui/material"
+        }
+      ],
+      "date": [
+        {
+          "type": "member",
+          "elements": ["DatePicker", "LocalizationProvider"],
+          "source": "@mui/x-date-pickers"
+        },
+        {
+          "type": "single",
+          "elements": ["AdapterDayjs"],
+          "source": "@mui/x-date-pickers/AdapterDayjs"
+        }
+      ]
+    },
     "pages": {
       "pageInfo": {
         "name": "PageInfo",
@@ -93,15 +121,7 @@
         "imports": [
           {
             "type": "member",
-            "elements": [
-              "Button",
-              "CircularProgress",
-              "FormControl",
-              "InputLabel",
-              "MenuItem",
-              "Select",
-              "TextField"
-            ],
+            "elements": ["Button", "CircularProgress", "FormControl"],
             "source": "@mui/material"
           },
           {

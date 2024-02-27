@@ -1,6 +1,7 @@
 package genesis.frontend;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +37,7 @@ public class FrontGeneration {
 
     // ilay import type mbola mila jerena
     // atao manokana angamba: mampiasa ImportVariable.getImportTemplate("member")
-    public static String generateImport(FrontLangage langage, PageImport[] toImports) throws Throwable {
+    public static String generateImport(FrontLangage langage, List<PageImport> toImports) throws Throwable {
         String content = "";
         String template = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_DIR + "/import-template.templ");
         Pattern pattern;

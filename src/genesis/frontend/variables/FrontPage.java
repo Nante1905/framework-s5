@@ -1,12 +1,30 @@
 package genesis.frontend.variables;
 
+import java.util.List;
+
 import handyman.HandyManUtils;
 
 public class FrontPage {
     String name;
     String path;
     String template;
-    PageImport[] imports;
+    List<PageImport> imports;
+
+    public void addImports(List<PageImport> a) {
+        for (PageImport p : a) {
+            addImport(p);
+        }
+    }
+
+    public void addImport(PageImport a) {
+        for (PageImport p : getImports()) {
+            if (p.getSource().equals(a.getSource())) {
+                p.addElement(a.getElements());
+                return;
+            }
+        }
+        imports.add(a);
+    }
 
     public void setPath(String projectName, String projectFrontName, String entityName, String extension) {
         String p = getPath().replace(("[projectName]"), projectName)
@@ -28,11 +46,11 @@ public class FrontPage {
         this.name = name;
     }
 
-    public PageImport[] getImports() {
+    public List<PageImport> getImports() {
         return imports;
     }
 
-    public void setImports(PageImport[] imports) {
+    public void setImports(List<PageImport> imports) {
         this.imports = imports;
     }
 

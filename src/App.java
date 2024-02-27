@@ -1,7 +1,5 @@
 import java.io.File;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -190,7 +188,7 @@ public class App {
 
                                         // FRONT: generate PageINfo for menu and routing
                                         FrontPage pageInfo = frontLangage.getPages().get("pageInfo");
-                                        pageInfoImports = new ArrayList<>(Arrays.asList(pageInfo.getImports()));
+                                        pageInfoImports = pageInfo.getImports();
                                         // mbola mila amboarina ny import sy variable
                                         String pageInfoTemplate = HandyManUtils.getFileContent(
                                                         Constantes.FRONT_TEMPLATE_DIR + "/" + pageInfo.getTemplate());
@@ -343,7 +341,7 @@ public class App {
                                                         .replace("[exportKey]",
                                                                         frontLangage.getVariables().getExportKey())
                                                         .replace("[endLine]", frontLangage.getVariables().getEndLine());
-                                        pageInfo.setImports(pageInfoImports.toArray(new PageImport[0]));
+                                        pageInfo.setImports(pageInfoImports);
 
                                         // IMPORT
                                         String pageInfoImportContent = FrontGeneration.generateImport(frontLangage,

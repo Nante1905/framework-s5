@@ -1,6 +1,7 @@
 package genesis.frontend.variables;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class FrontLangage {
     int id;
@@ -11,6 +12,7 @@ public class FrontLangage {
     HashMap<String, FrontPage> pages;
     HashMap<String, String> folders;
     HashMap<String, String> files;
+    HashMap<String, List<PageImport>> optionalImports;
 
     public int getId() {
         return id;
@@ -74,6 +76,14 @@ public class FrontLangage {
 
     public void setFiles(HashMap<String, String> files) {
         this.files = files;
+    }
+
+    public HashMap<String, List<PageImport>> getOptionalImports() {
+        return optionalImports;
+    }
+
+    public void setOptionalImports(HashMap<String, List<PageImport>> optionalImports) {
+        this.optionalImports = optionalImports;
     }
 
 }
