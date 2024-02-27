@@ -10,3 +10,4 @@
   - ampiana an'ilay type anaty PageImport[] zay vao antsoina ilay generateImport
 
 - gestion import amlay form satria dynamique
+  -mnu koa mila ovaina ilay nom app

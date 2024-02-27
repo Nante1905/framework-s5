@@ -29,9 +29,9 @@ public class App {
                 Database database;
                 Language language;
                 FrontLangage frontLangage;
-                String databaseName = "poketra", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
+                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
-                String projectName = "poketrav2", entityName = "*";
+                String projectName = "akanjov2", entityName = "*";
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile, apiProject, frontProject;
