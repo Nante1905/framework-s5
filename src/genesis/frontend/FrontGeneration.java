@@ -28,10 +28,21 @@ public class FrontGeneration {
 
         for (EntityField field : e.getFields()) {
             if (field.isPrimary()) {
-                System.out.println("atao hidden");
-            }
-            if (field.isForeign() == false) {
-
+                String pkInput = FrontGeneration.extractPartTemplate("&&inputPk&&", "&&endInputPk&&", inputTemplate)
+                        .group(1);
+                pkInput = pkInput.replace("[field]", field.getName());
+                inputs += pkInput;
+            } else if (field.isForeign() == false) {
+                if (field.getType().equals("date")) {
+                    String input = FrontGeneration
+                            .extractPartTemplate("&&inputDate&&", "&&endInputDate&&", inputTemplate)
+                            .group(1);
+                    input = input.replace("[field]", field.getName());
+                    input = input.replace("[inputLabel]", HandyManUtils.formatReadable(field.getName()));
+                    inputs += input;
+                } else {
+                    System.out.println(field.getType());
+                }
             }
         }
 

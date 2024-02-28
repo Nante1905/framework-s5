@@ -2,9 +2,9 @@
 
 const [entityMaj]Form = (props: [entityMaj]Props) => {
   const [state, setState] = useState<[entityMaj]State>(initialState);
-  useEffect(() => {}, []);
-
-  <foreignKeyGetter>  
+  useEffect(() => {
+    <foreignKeyGetter>
+  }, []);  
 
   const onSubmit = async (data: any) => {
     setState((state) => ({
