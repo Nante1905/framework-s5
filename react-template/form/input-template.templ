@@ -1,9 +1,12 @@
 <div className="form-input">
+    &&inputPk&&
+    <input type="hidden" {...register("[field]")} />
+    &&endInputPk&&
     &&input&&
-    <TextField label="[inputLabel]" {...register("[inputLabel]")} />
+    <TextField label="[inputLabel]" {...register("[field]")} />
     &&endInput&&
     &&inputNumeric&&
-    <TextField label="[inputLabel]" type="number" {...register("[inputLabel]")} />
+    <TextField label="[inputLabel]" type="number" {...register("[field]")} />
     &&endInputNumeric&&
     &&select&&
     {state.loading ? (
@@ -15,7 +18,7 @@
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="[inputLabel]"
-                {...register("[inputLabel]")}
+                {...register("[field]")}
                 defaultValue={
                   formState.defaultValues?.["[entityFkField]"]?.["[entityFkFieldPk]"]
                 }
@@ -36,7 +39,7 @@
           adapterLocale="fr"
         >
             <Controller
-              {...register("[inputLabel]")}
+              {...register("[field]")}
               control={control}
               render={({ field: { onChange, value } }) => (
                 <DatePicker

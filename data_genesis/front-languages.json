@@ -29,8 +29,8 @@
       }
     },
     "folders": {
-      "liste": "components/[entityMin]/[entityMin]-liste.component",
-      "form": "components/[entityMin]/[entityMin]-form.component"
+      "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
+      "form": "components/[entityMin]/[entityMin]-form.component.tsx"
     },
     "files": {
       "env": "src/shared/env/env.ts"

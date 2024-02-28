@@ -314,7 +314,6 @@ public class App {
                                                 // .getClassName())));
 
                                                 // PageInfo Content
-                                                // TODO: ahoana ty path tyh tyh XD
                                                 pageInfoImports.add(new PageImport("single",
                                                                 List.of(HandyManUtils
                                                                                 .majStart(entities[i].getClassName())
@@ -366,7 +365,7 @@ public class App {
                                 navLinkPath = navLinkPath.replace("[projectNameMin]",
                                                 HandyManUtils.minStart(projectName))
                                                 .replace("[projectApiName]", projectApiName);
-                                System.out.println(navLinkPath);
+
                                 HandyManUtils.overwriteFileContent(navLinkPath,
                                                 HandyManUtils.getFileContent(navLinkPath).replace("[navbarLinks]",
                                                                 navLink));

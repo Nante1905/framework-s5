@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import genesis.Constantes;
+import genesis.Entity;
+import genesis.EntityField;
 import genesis.frontend.variables.FrontLangage;
 import genesis.frontend.variables.ImportVariable;
 import genesis.frontend.variables.PageImport;
@@ -15,6 +17,26 @@ import handyman.HandyManUtils;
  * frontGeneration
  */
 public class FrontGeneration {
+
+    public String generateForm(FrontLangage langage, Entity e) throws Throwable {
+        String formTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FORM);
+        String inputTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_INPUT);
+        String fkGetterTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FK);
+        String finalContent = "";
+        String inputs = "", fkGetters = "";
+        List<PageImport> imports = langage.getPages().get("form").getImports();
+
+        for (EntityField field : e.getFields()) {
+            if (field.isPrimary()) {
+                System.out.println("atao hidden");
+            }
+            if (field.isForeign() == false) {
+
+            }
+        }
+
+        return finalContent;
+    }
 
     public static void rewriteEnv(FrontLangage langage, String projectName, String projectFrontName) throws Throwable {
         String envPath = projectName + "/" + projectFrontName + "/" + langage.getFiles().get("env")
