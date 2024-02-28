@@ -30,13 +30,21 @@
     },
     "folders": {
       "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
-      "form": "components/[entityMin]/[entityMin]-form.component.tsx"
+      "form": "components/[entityMin]/[entityMin]-form.component.tsx",
+      "type": "shared/types/[entityMaj].ts"
     },
     "files": {
       "env": "src/shared/env/env.ts"
     },
     "optionalImports": {
-      "textField": [
+      "text": [
+        {
+          "type": "member",
+          "elements": ["TextField"],
+          "source": "@mui/material"
+        }
+      ],
+      "number": [
         {
           "type": "member",
           "elements": ["TextField"],

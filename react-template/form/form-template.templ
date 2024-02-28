@@ -3,6 +3,7 @@
 const [entityMaj]Form = (props: [entityMaj]Props) => {
   const [state, setState] = useState<[entityMaj]State>(initialState);
   useEffect(() => {
+    <loading>
     <foreignKeyGetter>
   }, []);  
 
@@ -118,7 +119,7 @@ interface [entityMaj]State {
   sendLoading: boolean;
   error: string | null;
   success: string | null;
-  marque: Marque[];
+  <foreignKeyState>
 }
 
 const initialState: [entityMaj]State = {
@@ -126,7 +127,8 @@ const initialState: [entityMaj]State = {
   sendLoading: false,
   error: null,
   success: null,
-  marque: [],
+  <foreignKeyInitialState>
+  
 };
 
 export default [entityMaj]Form;

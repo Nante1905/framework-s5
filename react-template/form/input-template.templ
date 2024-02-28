@@ -1,58 +1,66 @@
-<div className="form-input">
     &&inputPk&&
-    <input type="hidden" {...register("[field]")} />
+    <div className="form-input">
+      <input type="hidden" {...register("[field]")} />
+    </div>
     &&endInputPk&&
-    &&input&&
-    <TextField label="[inputLabel]" {...register("[field]")} />
-    &&endInput&&
-    &&inputNumeric&&
-    <TextField label="[inputLabel]" type="number" {...register("[field]")} />
-    &&endInputNumeric&&
+    &&inputText&&
+    <div className="form-input">
+      <TextField label="[inputLabel]" {...register("[field]")} />
+    </div>
+    &&endInputText&&
+    &&inputNumber&&
+    <div className="form-input">
+      <TextField label="[inputLabel]" type="number" {...register("[field]")} />
+    </div>
+    &&endInputNumber&&
     &&select&&
-    {state.loading ? (
-        <CircularProgress />
-    ) : (
-            <FormControl sx={{ width: 200 }}>
-              <InputLabel id="demo-simple-select-label">[inputLabel]</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="[inputLabel]"
-                {...register("[field]")}
-                defaultValue={
-                  formState.defaultValues?.["[entityFkField]"]?.["[entityFkFieldPk]"]
-                }
-              >
-                {state.marque?.map((e: Marque, i) => (
-                  <MenuItem key={`fk${i}`} value={e?.[entityFkFieldPk]}>
-                    {e.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-        )}
+    <div className="form-input">
+      {state.loading ? (
+          <CircularProgress />
+      ) : (
+              <FormControl sx={{ width: 200 }}>
+                <InputLabel id="demo-simple-select-label">[inputLabel]</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  label="[inputLabel]"
+                  {...register("[field]")}
+                  defaultValue={
+                    formState.defaultValues?.["[entityFkField]"]?.["[entityFkFieldPk]"]
+                  }
+                >
+                  {state.[field]?.map((e: [type], i) => (
+                    <MenuItem key={`fk${i}`} value={e?.[entityFkFieldPk]}>
+                      {e.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+          )}
+    </div>
     &&endSelect&&
-    &&date&&
-    <FormControl>
-        <LocalizationProvider
-          dateAdapter={AdapterDayjs}
-          adapterLocale="fr"
-        >
-            <Controller
-              {...register("[field]")}
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <DatePicker
-                  label={"[inputLabel]"}
-                  format="DD/MM/YYYY"
-                  onChange={(event: any) => {
-                    onChange(event?.format("YYYY-MM-DD") as string);
-                  }}
-                  value={value}
-                />
-              )}
-            />
-        </LocalizationProvider>
-    </FormControl>
-    &&endDate&&
-</div>
+    &&inputDate&&
+    <div className="form-input">
+      <FormControl>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            adapterLocale="fr"
+          >
+              <Controller
+                {...register("[field]")}
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <DatePicker
+                    label={"[inputLabel]"}
+                    format="DD/MM/YYYY"
+                    onChange={(event: any) => {
+                      onChange(event?.format("YYYY-MM-DD") as string);
+                    }}
+                    value={value}
+                  />
+                )}
+              />
+          </LocalizationProvider>
+      </FormControl>
+    </div>
+    &&endinputDate&&

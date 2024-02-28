@@ -1,5 +1,6 @@
 package genesis.frontend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -7,8 +8,10 @@ import java.util.regex.Pattern;
 
 import genesis.Constantes;
 import genesis.Entity;
+import genesis.EntityColumn;
 import genesis.EntityField;
 import genesis.frontend.variables.FrontLangage;
+import genesis.frontend.variables.FrontPage;
 import genesis.frontend.variables.ImportVariable;
 import genesis.frontend.variables.PageImport;
 import handyman.HandyManUtils;
@@ -18,35 +21,102 @@ import handyman.HandyManUtils;
  */
 public class FrontGeneration {
 
-    public String generateForm(FrontLangage langage, Entity e) throws Throwable {
+    public static String generateForm(FrontLangage langage, Entity e) throws Throwable {
         String formTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FORM);
         String inputTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_INPUT);
         String fkGetterTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FK);
         String finalContent = "";
-        String inputs = "", fkGetters = "";
-        List<PageImport> imports = langage.getPages().get("form").getImports();
+        String inputs = "", fkGetters = "", fkState = "", fkInitState = "";
+        FrontPage form = langage.getPages().get("form");
+        String typeFile = langage.getFolders().get("type");
 
+        // List<PageImport> imports = langage.getPages().get("form").getImports();
+
+        @SuppressWarnings("unchecked")
+        HashMap<String, String> inputTypes = HandyManUtils.fromJson(HashMap.class,
+                HandyManUtils.getFileContent(Constantes.INPUT_TYPES));
+
+        int columnCount = 0;
         for (EntityField field : e.getFields()) {
             if (field.isPrimary()) {
                 String pkInput = FrontGeneration.extractPartTemplate("&&inputPk&&", "&&endInputPk&&", inputTemplate)
                         .group(1);
                 pkInput = pkInput.replace("[field]", field.getName());
                 inputs += pkInput;
-            } else if (field.isForeign() == false) {
-                if (field.getType().equals("date")) {
-                    String input = FrontGeneration
-                            .extractPartTemplate("&&inputDate&&", "&&endInputDate&&", inputTemplate)
-                            .group(1);
-                    input = input.replace("[field]", field.getName());
-                    input = input.replace("[inputLabel]", HandyManUtils.formatReadable(field.getName()));
-                    inputs += input;
-                } else {
-                    System.out.println(field.getType());
-                }
+
+                formTemplate = formTemplate.replace("[entityPkField]", field.getName());
+            } else if (field.isForeign()) {
+                String select = FrontGeneration.extractPartTemplate("&&select&&", "&&endSelect&&", inputTemplate)
+                        .group(1);
+                select = select.replace("[inputLabel]", HandyManUtils.formatReadable(field.getName()));
+                select = select.replace("[field]", field.getName());
+                select = select.replace("[type]", field.getType());
+
+                EntityColumn c = e.getColumns()[columnCount];
+                select = select.replace("[entityFkField]", HandyManUtils.toCamelCase(c.getReferencedTable()));
+                select = select.replace("[entityFkFieldPk]", field.getReferencedField());
+
+                inputs += select;
+                fkGetters += FrontGeneration.generateForeignGetter(e.getColumns()[columnCount], fkGetterTemplate);
+
+                String[] fkStateGenerated = FrontGeneration.generateFkState(field);
+                fkState += fkStateGenerated[0];
+                fkInitState += fkStateGenerated[1];
+                // add Import
+                form.addImports(langage.getOptionalImports().get("select"));
+                PageImport p = new PageImport("member", new ArrayList<String>() {
+                    {
+                        add(HandyManUtils.majStart(field.getName()));
+                    }
+                }, "../../" + typeFile.replace("[entityMaj]", HandyManUtils.majStart(field.getName())));
+
+                form.addImport(p);
+            } else {
+                String fieldInputType = inputTypes.get(field.getType());
+                String start = "&&input" + HandyManUtils.majStart(fieldInputType) + "&&";
+                String end = "&&endInput" + HandyManUtils.majStart(fieldInputType) + "&&";
+                form.addImports(langage.getOptionalImports().get(fieldInputType));
+
+                String input = FrontGeneration.extractPartTemplate(start, end, inputTemplate).group(1);
+                input = input.replace("[inputLabel]", HandyManUtils.formatReadable(field.getName()));
+                input = input.replace("[field]", field.getName());
+
+                inputs += input;
             }
+            columnCount++;
         }
 
+        formTemplate = formTemplate.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName()));
+        formTemplate = formTemplate.replace("[entityMin]", HandyManUtils.minStart(e.getClassName()));
+        formTemplate = formTemplate.replace("<input>", inputs);
+        formTemplate = formTemplate.replace("<foreignKeyGetter>", fkGetters);
+        formTemplate = formTemplate.replace("<foreignKeyState>", fkState);
+        formTemplate = formTemplate.replace("<foreignKeyInitialState>", fkInitState);
+        formTemplate = formTemplate.replace("<import>", generateImport(langage, form.getImports()));
+        // inputs = FrontGeneration.generateInputs(e, inputTemplate);
+        finalContent = formTemplate;
         return finalContent;
+    }
+
+    public static String[] generateFkState(EntityField field) {
+        String fkStateTempl = "[field] : [type][];\n";
+        String fkInitStateTempl = "[field] : [],\n";
+
+        fkStateTempl = fkStateTempl.replace("[field]", field.getName());
+        fkStateTempl = fkStateTempl.replace("[type]", field.getType());
+
+        fkInitStateTempl = fkInitStateTempl.replace("[field]", field.getName());
+
+        return new String[] { fkStateTempl, fkInitStateTempl };
+
+    }
+
+    public static String generateForeignGetter(EntityColumn column, String fkGetterTemplate) {
+
+        String template = "";
+        template += fkGetterTemplate.replace("[foreignKeyEntity]", HandyManUtils.toCamelCase(column.getName()));
+
+        return template;
     }
 
     public static void rewriteEnv(FrontLangage langage, String projectName, String projectFrontName) throws Throwable {
