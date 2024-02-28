@@ -11,4 +11,25 @@
 
 - gestion import amlay form satria dynamique
   -mnu koa mila ovaina ilay nom app
+
   - mila ovaina jackson json lay gson (anaty toJson handyman) fa tsy haiko mampiditra jar an'ilay jackson anaty jar an'ilay handyman ref buildena lay izy
+
+  generate form:
+
+- String generateForm(Entity e)
+- alaina ilay template
+- alaina template input, inputNumber, select, date
+- alaina template foreignKeyGetter
+- manao var String inputs, foreignKey, pageImport
+- tetezina ny e.getFields() d ampiana ny var inputs
+  - si isForeignKey false
+    +si type = date => alaina template date, ovaina ny variable ao (inputLabel) d manampy pageImport
+    +si Integer ou int => alaina template inputNumber, ovaina ny variable ao (inputLabel) d manampy pageImport  
+     +sinon => alaina template input, ovaina ny variable ao (inputLabel) d manampy pageImport
+    \*sinon :
+    - alaina template select, ovaina variable (inputLabel, entityFkField, entityFkPk)
+    - alaina template foreignKeyGetter, ovaina ny variable ao (entityMin) d ampiana ny var foreignKey
+- ny entityMaj ovaina entityMaj
+- FrontPage.addImport(pageImport)
+- ny <import>, <foreignKey>, <input> anaty template ovaina
+- generer fichier
