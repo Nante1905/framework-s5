@@ -294,6 +294,8 @@ public class App {
                                                 // HandyManUtils.createFile(viewFile);
                                                 HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                                 HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
+                                                FrontGeneration.generateView(frontLangage, entities[i], projectName,
+                                                                projectFrontName);
                                                 // HandyManUtils.overwriteFileContent(viewFile, views[i]);
                                                 // navLink += language.getNavbarLinks().getLink();
                                                 // navLink = navLink.replace("[projectNameMaj]",
@@ -314,7 +316,6 @@ public class App {
                                                 // .getClassName())));
 
                                                 // PageInfo Content
-                                                // TODO: ahoana ty path tyh tyh XD
                                                 pageInfoImports.add(new PageImport("single",
                                                                 List.of(HandyManUtils
                                                                                 .majStart(entities[i].getClassName())
@@ -366,7 +367,7 @@ public class App {
                                 navLinkPath = navLinkPath.replace("[projectNameMin]",
                                                 HandyManUtils.minStart(projectName))
                                                 .replace("[projectApiName]", projectApiName);
-                                System.out.println(navLinkPath);
+
                                 HandyManUtils.overwriteFileContent(navLinkPath,
                                                 HandyManUtils.getFileContent(navLinkPath).replace("[navbarLinks]",
                                                                 navLink));
