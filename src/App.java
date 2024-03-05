@@ -294,6 +294,8 @@ public class App {
                                                 // HandyManUtils.createFile(viewFile);
                                                 HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                                 HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
+                                                FrontGeneration.generateView(frontLangage, entities[i], projectName,
+                                                                projectFrontName);
                                                 // HandyManUtils.overwriteFileContent(viewFile, views[i]);
                                                 // navLink += language.getNavbarLinks().getLink();
                                                 // navLink = navLink.replace("[projectNameMaj]",

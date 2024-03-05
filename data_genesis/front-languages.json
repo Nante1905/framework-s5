@@ -65,7 +65,12 @@
           "source": "@mui/x-date-pickers"
         },
         {
-          "type": "single",
+          "type": "member",
+          "elements": ["Controller"],
+          "source": "react-hook-form"
+        },
+        {
+          "type": "member",
           "elements": ["AdapterDayjs"],
           "source": "@mui/x-date-pickers/AdapterDayjs"
         }
@@ -125,7 +130,7 @@
       },
       "form": {
         "name": "[entity]-form.component",
-        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form.component.tsx",
         "imports": [
           {
             "type": "member",
@@ -171,7 +176,7 @@
       },
       "list": {
         "name": "[entity]-liste.component",
-        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste.component.tsx",
         "imports": [
           {
             "type": "member",

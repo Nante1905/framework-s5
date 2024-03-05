@@ -16,6 +16,7 @@ public class Constantes {
     public static final String FRONT_TEMPLATE_DIR = "react-template";
     public static final String FRONT_TEMPLATE_FORM = FRONT_TEMPLATE_DIR + "/form/form-template.templ";
     public static final String FRONT_TEMPLATE_INPUT = FRONT_TEMPLATE_DIR + "/form/input-template.templ";
+    public static final String FRONT_TEMPLATE_LOADING = FRONT_TEMPLATE_DIR + "/form/loading-template.templ";
     public static final String FRONT_TEMPLATE_FK = FRONT_TEMPLATE_DIR + "/form/foreignKey-getter-template.templ";
     public static final String INPUT_TYPES = FRONT_TEMPLATE_DIR + "/input-types.json";
 

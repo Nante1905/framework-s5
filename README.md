@@ -33,3 +33,6 @@
 - FrontPage.addImport(pageImport)
 - ny <import>, <foreignKey>, <input> anaty template ovaina
 - generer fichier
+
+- ilay status amin'ilay exception
+- génération code asiana meethod ny URLMapping

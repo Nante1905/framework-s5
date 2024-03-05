@@ -104,26 +104,28 @@
       "controllerMethods": [
         {
           "controllerMethodAnnotations": [
-            "@URLMapping(\"insert[classNameMin].do\")"
+            "@URLMapping(value=\"insert[classNameMin].do\", method=\"POST\")"
           ],
           "controllerMethodParameter": "",
           "controllerMethodContent": "flamework/controller/flameworkControllerInsert"
         },
         {
-          "controllerMethodAnnotations": ["@URLMapping(\"[classNameMin].do\")"],
+          "controllerMethodAnnotations": [
+            "@URLMapping(value=\"[classNameMin].do\")"
+          ],
           "controllerMethodParameter": "",
           "controllerMethodContent": "flamework/controller/flameworkControllerRead"
         },
         {
           "controllerMethodAnnotations": [
-            "@URLMapping(\"update[classNameMin].do\")"
+            "@URLMapping(value=\"update[classNameMin].do\", method=\"PUT\")"
           ],
           "controllerMethodParameter": "",
           "controllerMethodContent": "flamework/controller/flameworkControllerUpdate"
         },
         {
           "controllerMethodAnnotations": [
-            "@URLMapping(\"delete[classNameMin].do\")"
+            "@URLMapping(value=\"delete[classNameMin].do\", method=\"DELETE\")"
           ],
           "controllerMethodParameter": "",
           "controllerMethodContent": "flamework/controller/flameworkControllerDelete"

@@ -10,6 +10,8 @@ import genesis.Constantes;
 import genesis.Entity;
 import genesis.EntityColumn;
 import genesis.EntityField;
+import genesis.frontend.components.EntityComponent;
+import genesis.frontend.components.FormListComponent;
 import genesis.frontend.variables.FrontLangage;
 import genesis.frontend.variables.FrontPage;
 import genesis.frontend.variables.ImportVariable;
@@ -20,13 +22,36 @@ import handyman.HandyManUtils;
  * frontGeneration
  */
 public class FrontGeneration {
+    public static int SUBSTACT_SPACE = 5;
 
-    public static String generateForm(FrontLangage langage, Entity e) throws Throwable {
+    public static void generateView(FrontLangage langage, Entity e, String projectName, String projectFrontName)
+            throws Throwable {
+
+        FormListComponent view = new FormListComponent();
+        EntityComponent form = generateForm(langage, e);
+        form.setPath(form.getPath().replace("[projectName]", projectName)
+                .replace("[projectFrontName]", projectFrontName));
+        view.setForm(generateForm(langage, e));
+        HandyManUtils.createFile(form.getPath());
+        HandyManUtils.overwriteFileContent(form.getPath(), form.getContent());
+
+        EntityComponent liste = new EntityComponent();
+        liste.setPath(projectFrontName);
+        // view.setFormContent(generateForm(langage, e));
+        // view.setListeContent(projectFrontName);
+        // return view;
+    }
+
+    // public static EntityComponent generateListeTmp()
+
+    public static EntityComponent generateForm(FrontLangage langage, Entity e) throws Throwable {
+        System.out.println("Generating form for " + e.getClassName());
         String formTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FORM);
         String inputTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_INPUT);
         String fkGetterTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FK);
+        String loadTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_LOADING);
         String finalContent = "";
-        String inputs = "", fkGetters = "", fkState = "", fkInitState = "";
+        String inputs = "", fkGetters = "", fkState = "", fkInitState = "", loading = "";
         FrontPage form = langage.getPages().get("form");
         String typeFile = langage.getFolders().get("type");
 
@@ -46,6 +71,11 @@ public class FrontGeneration {
 
                 formTemplate = formTemplate.replace("[entityPkField]", field.getName());
             } else if (field.isForeign()) {
+                // loading
+                if (loading.length() == 0) {
+                    loading = loadTemplate;
+                }
+
                 String select = FrontGeneration.extractPartTemplate("&&select&&", "&&endSelect&&", inputTemplate)
                         .group(1);
                 select = select.replace("[inputLabel]", HandyManUtils.formatReadable(field.getName()));
@@ -93,9 +123,14 @@ public class FrontGeneration {
         formTemplate = formTemplate.replace("<foreignKeyState>", fkState);
         formTemplate = formTemplate.replace("<foreignKeyInitialState>", fkInitState);
         formTemplate = formTemplate.replace("<import>", generateImport(langage, form.getImports()));
-        // inputs = FrontGeneration.generateInputs(e, inputTemplate);
+        formTemplate = formTemplate.replace("<loading>", loading);
+
         finalContent = formTemplate;
-        return finalContent;
+
+        EntityComponent component = new EntityComponent();
+        component.setContent(finalContent);
+        component.setPath(form.getPath().replace("[entityMin]", HandyManUtils.minStart(e.getClassName())));
+        return component;
     }
 
     public static String[] generateFkState(EntityField field) {
@@ -114,7 +149,8 @@ public class FrontGeneration {
     public static String generateForeignGetter(EntityColumn column, String fkGetterTemplate) {
 
         String template = "";
-        template += fkGetterTemplate.replace("[foreignKeyEntity]", HandyManUtils.toCamelCase(column.getName()));
+        template += fkGetterTemplate.replace("[foreignKeyEntity]",
+                HandyManUtils.toCamelCase(column.getReferencedTable()));
 
         return template;
     }
@@ -123,7 +159,6 @@ public class FrontGeneration {
         String envPath = projectName + "/" + projectFrontName + "/" + langage.getFiles().get("env")
                 .replace("[projectName]", projectName)
                 .replace("[projectFrontName]", projectFrontName);
-        System.out.println(envPath);
         String content = HandyManUtils.getFileContent(envPath);
         content = content.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
         HandyManUtils.overwriteFileContent(envPath, content);
