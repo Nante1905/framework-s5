@@ -29,14 +29,22 @@
       }
     },
     "folders": {
-      "liste": "components/[entityMin]/[entityMin]-liste.component",
-      "form": "components/[entityMin]/[entityMin]-form.component"
+      "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
+      "form": "components/[entityMin]/[entityMin]-form.component.tsx",
+      "type": "shared/types/[entityMaj].ts"
     },
     "files": {
       "env": "src/shared/env/env.ts"
     },
     "optionalImports": {
-      "textField": [
+      "text": [
+        {
+          "type": "member",
+          "elements": ["TextField"],
+          "source": "@mui/material"
+        }
+      ],
+      "number": [
         {
           "type": "member",
           "elements": ["TextField"],
@@ -57,7 +65,12 @@
           "source": "@mui/x-date-pickers"
         },
         {
-          "type": "single",
+          "type": "member",
+          "elements": ["Controller"],
+          "source": "react-hook-form"
+        },
+        {
+          "type": "member",
           "elements": ["AdapterDayjs"],
           "source": "@mui/x-date-pickers/AdapterDayjs"
         }
@@ -117,7 +130,7 @@
       },
       "form": {
         "name": "[entity]-form.component",
-        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form.component.tsx",
         "imports": [
           {
             "type": "member",
@@ -153,12 +166,17 @@
             "type": "member",
             "elements": ["URL_API"],
             "source": "../../shared/env/env"
+          },
+          {
+            "type": "member",
+            "elements": ["useForm"],
+            "source": "react-hook-form"
           }
         ]
       },
       "list": {
         "name": "[entity]-liste.component",
-        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste",
+        "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste.component.tsx",
         "imports": [
           {
             "type": "member",
