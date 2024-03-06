@@ -1,3 +1,7 @@
+    setState((state) => ({
+      ...state,
+      loading: true,
+    }));
     axios
       .get(`${URL_API}/[foreignKeyEntity].do`)
       .then((res) => {

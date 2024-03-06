@@ -1,0 +1,222 @@
+<import>
+
+interface [entityMaj]ListeState {
+  data: [entityMaj][];
+  loading: boolean;
+  error: string | null;
+  success: string | null;
+  openForm: boolean;
+  id: string | undefined;
+  openDelete: boolean;
+  laodingDelete: boolean;
+}
+
+const initialState : [entityMaj]ListeState = {
+  data: [],
+  loading: false,
+  error: null,
+  success: null,
+  openForm: false,
+  id: undefined,
+  openDelete: false,
+  laodingDelete: false,
+}
+
+const [entityMaj]Liste = () => {
+  const [state, setState] = useState<[entityMaj]State>(initialState);
+  useEffect(() => {
+    <loading>
+    <foreignKeyGetter>
+  }, []); 
+  
+  const openForm = (id?: string) => {
+    setState((state) => ({
+      ...state,
+      openForm: true,
+      id: id,
+    }));
+  };
+
+  const openDeleteForm = (id?: string) => {
+    setState((state) => ({
+      ...state,
+      id: id,
+      openDelete: true,
+    }));
+  };
+
+   const onDelete = (id: string) => {
+    console.log("DELETE");
+
+    setState((state) => ({
+      ...state,
+      loadingDelete: true,
+    }));
+    const options = {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      data: qs.stringify({ [entityFkFieldPk]: id }),
+      url: `${URL_API}/delete[entityMin].do`,
+    };
+    axios(options)
+      .then((res) => {
+        console.log(res);
+
+        setState((state) => ({
+          ...state,
+          success: "Suppression réussie",
+          loadingDelete: false,
+          openDelete: false,
+        }));
+        _.remove(state.data, (value) => value?.[entityFkFieldPk] === Number(state.id));
+      })
+      .catch((err) => {
+        console.error(err);
+
+        let errorMessage = "Une erreur s'est produite";
+        if (
+          err.response?.data.err &&
+          err.response?.data.err != "" &&
+          err.response?.data.err != null
+        ) {
+          errorMessage = err.response.data.err;
+        }
+        setState((state) => ({
+          ...state,
+          error: errorMessage,
+          loadingDelete: false,
+          openDelete: false,
+        }));
+      });
+  };
+
+    return (
+    <>
+      <div>
+        <div className="crud-list-container">
+          <div className="list-actions inline-flex-end">
+            <Button variant="contained" onClick={() => openForm()}>
+              Ajouter
+            </Button>
+          </div>
+          {state.loading ? (
+            <CircularProgress className="text-center" />
+          ) : (
+            <>
+
+            <div className="list-tab">
+            <Table>
+              <tableHead>
+                       {state.data.map((d, index) => (
+                      <TableRow
+                        key={`d_${index}`}
+                        className={
+                          state.id
+                            ? Number(state.id) === d.[fieldpk]
+                              ? "selected"
+                              : ""
+                            : ""
+                        }
+                      >
+  
+                    <tableBody>
+                    <Tooltip title={"Modifier"}>
+                            <Button
+                              onClick={() =>
+                                openForm((d.[fieldpk] as number).toString())
+                              }
+                            >
+                              <EditIcon />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title={"Supprimer"}>
+                            <Button
+                              className="danger"
+                              onClick={() =>
+                                openDeleteForm(
+                                  (d.[fieldpk] as number).toString()
+                                )
+                              }
+                            >
+                              <DeleteForeverIcon />
+                            </Button>
+                          </Tooltip>
+                          </TableRow>
+                            ))}
+            </Table>
+            </div>
+                   {/* AJOUT/UPDATE MODAL */}
+              <Dialog open={state.openForm} className="form-dialog">
+                <DialogContent>
+                  <[entityMaj]Form id={state.id} />
+                  <div className="vertical-margin">
+                    <Button
+                      variant="contained"
+                      onClick={() =>
+                        setState((state) => ({
+                          ...state,
+                          openForm: false,
+                        }))
+                      }
+                    >
+                      Annuler
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+                {/* DELETE MODAL */}
+              <div>
+                <Dialog
+                  open={state.openDelete}
+                  className="form-dialog delete-dialog"
+                  sx={{
+                    topScrollPaper: {
+                      alignItems: "flex-start",
+                    },
+                    topPaperScrollBody: {
+                      verticalAlign: "top",
+                    },
+                  }}
+                >
+                 <DialogContent>
+                    <DeleteModal
+                      onClose={() =>
+                        setState((state) => ({
+                          ...state,
+                          openDelete: false,
+                        }))
+                      }
+                      onConfirm={() => onDelete(state.id as string)}
+                      loading={state.laodingDelete}
+                    />
+                  </DialogContent>
+                </Dialog>
+                  </div>
+            </>
+          )}
+            </div>
+      </div>
+      <ErrorSnackBar
+        open={state.error != null}
+        onClose={() =>
+          setState(() => ({
+            ...state,
+            error: null,
+          }))
+        }
+        error={state.error as string}
+      />
+      <SuccessSnackBar
+        open={state.success != null}
+        onClose={() =>
+          setState(() => ({
+            ...state,
+            success: null,
+          }))
+        }
+        message={state.success as string}
+      />
+    </>
+        );
+    
+};
