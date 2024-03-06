@@ -10,6 +10,8 @@ import genesis.Constantes;
 import genesis.Entity;
 import genesis.EntityColumn;
 import genesis.EntityField;
+import genesis.frontend.components.EntityComponent;
+import genesis.frontend.components.FormListComponent;
 import genesis.frontend.variables.FrontLangage;
 import genesis.frontend.variables.FrontPage;
 import genesis.frontend.variables.ImportVariable;
@@ -33,8 +35,11 @@ public class FrontGeneration {
         HandyManUtils.createFile(form.getPath());
         HandyManUtils.overwriteFileContent(form.getPath(), form.getContent());
 
+        // mbola ovaina otran'ilay generateForm ilay generateListe
         EntityComponent liste = new EntityComponent();
         liste.setPath(projectFrontName);
+        liste.setContent(generateList(langage, e));
+        view.setListe(liste);
         // view.setFormContent(generateForm(langage, e));
         // view.setListeContent(projectFrontName);
         // return view;

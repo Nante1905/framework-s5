@@ -29,7 +29,7 @@ public class App {
                 Database database;
                 Language language;
                 FrontLangage frontLangage;
-                String databaseName = "akanjo", user = "postgres", pwd = "postgres", host = "localhost", port = "5432";
+                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
                 String projectName = "akanjov2", entityName = "*";
                 Credentials credentials;
@@ -120,6 +120,9 @@ public class App {
                                 HandyManUtils.overwriteFileContent(customFilePath, customFileContentOuter);
                         }
 
+                        System.out.println(Constantes.DATA_PATH + "/" + language.getSkeleton() + "."
+                                        + Constantes.SKELETON_EXTENSION + "app path " +
+                                        apiProject.getPath());
                         // Extract API skeleton
                         HandyManUtils.extractDir(
                                         Constantes.DATA_PATH + "/" + language.getSkeleton() + "."
@@ -361,16 +364,16 @@ public class App {
                                 // ENV
                                 FrontGeneration.rewriteEnv(frontLangage, projectName, projectFrontName);
 
-                                navLinkPath = language.getNavbarLinks().getPath().replace("[projectNameMaj]",
-                                                HandyManUtils.majStart(projectName))
-                                                .replace("[projectApiName]", projectApiName);
-                                navLinkPath = navLinkPath.replace("[projectNameMin]",
-                                                HandyManUtils.minStart(projectName))
-                                                .replace("[projectApiName]", projectApiName);
+                                // navLinkPath = language.getNavbarLinks().getPath().replace("[projectNameMaj]",
+                                // HandyManUtils.majStart(projectName))
+                                // .replace("[projectApiName]", projectApiName);
+                                // navLinkPath = navLinkPath.replace("[projectNameMin]",
+                                // HandyManUtils.minStart(projectName))
+                                // .replace("[projectApiName]", projectApiName);
 
-                                HandyManUtils.overwriteFileContent(navLinkPath,
-                                                HandyManUtils.getFileContent(navLinkPath).replace("[navbarLinks]",
-                                                                navLink));
+                                // HandyManUtils.overwriteFileContent(navLinkPath,
+                                // HandyManUtils.getFileContent(navLinkPath).replace("[navbarLinks]",
+                                // navLink));
                                 for (CustomChanges c : language.getCustomChanges()) {
                                         customChanges = "";
                                         for (Entity e : entities) {

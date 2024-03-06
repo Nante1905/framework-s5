@@ -10,7 +10,7 @@ public ModelRest crudpage(ServletEntity entity){
         } else {
             if (entity.getData().get("page") != null) {
                 int page = Integer.parseInt(entity.getData().get("page"));
-                int taille = Constantes.TAILLE_PAGE;
+                int taille = Constant.TAILLE_PAGE;
                 if (entity.getData().get("taille") != null) {
                     taille = Integer.parseInt(entity.getData().get("taille"));
                 }
