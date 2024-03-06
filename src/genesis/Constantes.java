@@ -14,13 +14,13 @@ public class Constantes {
     public static final int LABEL_FIRST_STRING = 2;
     public static final int SET_LABEL_LATER = 3;
     public static final String FRONT_TEMPLATE_DIR = "react-template";
-    public static final String LIST_TEMPLATE= FRONT_TEMPLATE_DIR + "/liste/liste-template.templ";
-    public static final String TABLEHEAD_TEMPLATE= FRONT_TEMPLATE_DIR + "/liste/tablehead-template.templ";
-    public static final String TABLEBODY_TEMPLATE= FRONT_TEMPLATE_DIR + "/liste/tablebody-template.templ";
-    public static final String FRONT_TEMPLATE_FK = null;
+    public static final String LIST_TEMPLATE = FRONT_TEMPLATE_DIR + "/liste/liste-template.templ";
+    public static final String TABLEHEAD_TEMPLATE = FRONT_TEMPLATE_DIR + "/liste/tablehead-template.templ";
+    public static final String TABLEBODY_TEMPLATE = FRONT_TEMPLATE_DIR + "/liste/tablebody-template.templ";
     public static final String FRONT_TEMPLATE_FORM = FRONT_TEMPLATE_DIR + "/form/form-template.templ";
     public static final String FRONT_TEMPLATE_INPUT = FRONT_TEMPLATE_DIR + "/form/input-template.templ";
     public static final String FRONT_TEMPLATE_LOADING = FRONT_TEMPLATE_DIR + "/form/loading-template.templ";
     public static final String FRONT_TEMPLATE_FK = FRONT_TEMPLATE_DIR + "/form/foreignKey-getter-template.templ";
     public static final String INPUT_TYPES = FRONT_TEMPLATE_DIR + "/input-types.json";
+    public static final int TAILLE_PAGE = 5;
 }
