@@ -75,7 +75,8 @@
         "import org.postgresql.util.PSQLException;",
         "import eriq.flamework.dao.DatabaseInfo;",
         "import constants.Constant;",
-        "import veda.godao.utils.Paginated;"
+        "import veda.godao.utils.Paginated;",
+        "import handyman.Utils;"
       ],
       "controllerAnnotations": ["@Controller", "@Singleton"],
       "controllerExtends": "",

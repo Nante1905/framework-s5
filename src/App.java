@@ -31,7 +31,7 @@ public class App {
                 FrontLangage frontLangage;
                 String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
-                String projectName = "akanjov2", entityName = "*";
+                String projectName = "akanjov3", entityName = "*";
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile, apiProject, frontProject;
@@ -42,13 +42,14 @@ public class App {
                 String customFileContent;
                 String foreignContext;
                 String customChanges, changesFile;
-                String navLink, navLinkPath;
                 String pageInfoContent = "";
                 String projectApiName, projectFrontName;
                 List<PageImport> pageInfoImports;
+                // TODO: remove those lines
                 database = databases[0];
                 language = languages[0];
                 try (Scanner scanner = new Scanner(System.in)) {
+                        // TODO: uncomment those lilnes
                         // System.out.println("Choose a database engine:");
                         // for (int i = 0; i < databases.length; i++) {
                         // System.out.println((i + 1) + ") " + databases[i].getNom());
@@ -170,7 +171,6 @@ public class App {
                                 models = new String[entities.length];
                                 controllers = new String[entities.length];
                                 // views = new String[entities.length];
-                                navLink = "";
                                 try (Scanner sc = new Scanner(System.in)) {
                                         System.out.println("How do you want to set label for the Foreign Keys ?");
                                         System.out.println(

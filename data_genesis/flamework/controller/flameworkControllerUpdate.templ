@@ -1,7 +1,6 @@
 public ModelRest update(ServletEntity entity) {
-    [classNameMaj] o=new [classNameMaj]();
-    [controllerChangeInstanciation]
-    [classNameMaj] where=new [classNameMaj]();
+    [classNameMaj] o = Utils.fromJson([classNameMaj].class, entity.getBody());
+    [classNameMaj] where = new [classNameMaj]();
     DatabaseInfo d = DatabaseInfo.getInstance(null);
     ModelRest model=new ModelRest();
     [controllerWhereInstanciation]
