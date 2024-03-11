@@ -223,13 +223,13 @@ public class FrontGeneration {
         String finalContent = "";
         String tablehead = "", tablebody = "", fkGetters = "";
         FrontPage form = langage.getPages().get("form");
-        // String typeFile = langage.getFolders().get("type");
-        // List<PageImport> imports = langage.getPages().get("form").getImports();
-
+        String typeFile = langage.getFolders().get("type");
         int columnCount = 0;
         for (EntityField field : e.getFields()) {
+            
             if (field.isPrimary()) {
                 listTemplate = listTemplate.replace("[fieldpk]", field.getName());
+                listTemplate= listTemplate.replace("[entityFkFieldPk]", field.getName());
 
             } else {
                 String start = "%%tableHead%%";
@@ -237,31 +237,43 @@ public class FrontGeneration {
 
                 String fieldHeadTemplate = FrontGeneration.extractPartTemplate(start, end, tableHeadTemplate).group(1);
 
-                String fieldHead = fieldHeadTemplate.replace("[field]", field.getName());
-                tablehead += fieldHead;
-
+            
+                String fieldHead = fieldHeadTemplate.replace("[field]", HandyManUtils.majStart(field.getName()));
+                tablehead+=fieldHead;
+                
                 String startBody = "%%tableBody%%";
                 String endBody = "%%endtableBody%%";
+        
+                String fieldBodyTemplate = FrontGeneration.extractPartTemplate(startBody, endBody, tableBodyTemplate).group(1);
+                
+                    if (field.isForeign()) {
+                        String fieldbody = fieldBodyTemplate.replace("[field]", field.getName())
+                                                             .replace("[field2]", "label"); 
+                        tablebody+=fieldbody;
+                        fkGetters += FrontGeneration.generateForeignGetter(e.getColumns()[columnCount], fkGetterTemplate);
+                    } else {
+                        String fieldBodyNoFk = fieldBodyTemplate.replace("[field]", field.getName())
+                                                                 .replace("." + "[field2]", ""); 
+                        tablebody+=fieldBodyNoFk;
+                    }    
 
-                String fieldBodyTemplate = FrontGeneration.extractPartTemplate(startBody, endBody, tableBodyTemplate)
-                        .group(1);
-
-                if (field.isForeign()) {
-                    String fieldbody = fieldBodyTemplate.replace("[field]", field.getName())
-                            .replace("[field2]", "nom");
-                    tablebody += fieldbody;
-                    fkGetters += FrontGeneration.generateForeignGetter(e.getColumns()[columnCount], fkGetterTemplate);
-                } else {
-                    String fieldBodyNoFk = fieldBodyTemplate.replace("[field]", field.getName())
-                            .replace("." + "[field2]", "");
-                    tablebody += fieldBodyNoFk;
-                }
 
             }
             columnCount++;
 
         }
-        tablehead += ("<TableCell colSpan={2} className=\"text-center\">Actions</TableCell>");
+
+                    tablehead+=("<TableCell colSpan={2} className=\"text-center\">Actions</TableCell>");
+        
+        form.addImports(langage.getOptionalImports().get("select"));
+        PageImport p = new PageImport("member", new ArrayList<String>() {
+            {
+                add(HandyManUtils.majStart(e.getClassName()));
+            }
+        }, "../../" + typeFile.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName())));
+        form.addImport(p);
+
+
         listTemplate = listTemplate.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName()));
         listTemplate = listTemplate.replace("[entityMin]", HandyManUtils.minStart(e.getClassName()));
         listTemplate = listTemplate.replace("<tableHead>", tablehead);
