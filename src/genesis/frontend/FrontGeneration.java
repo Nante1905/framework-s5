@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import genesis.Constantes;
 import genesis.Entity;
-import genesis.EntityField;
 import genesis.EntityColumn;
 import genesis.EntityField;
 import genesis.frontend.components.EntityComponent;
@@ -36,8 +35,11 @@ public class FrontGeneration {
         HandyManUtils.createFile(form.getPath());
         HandyManUtils.overwriteFileContent(form.getPath(), form.getContent());
 
+        // mbola ovaina otran'ilay generateForm ilay generateListe
         EntityComponent liste = new EntityComponent();
         liste.setPath(projectFrontName);
+        liste.setContent(generateList(langage, e));
+        view.setListe(liste);
         // view.setFormContent(generateForm(langage, e));
         // view.setListeContent(projectFrontName);
         // return view;
@@ -216,14 +218,12 @@ public class FrontGeneration {
     public static String generateList(FrontLangage langage, Entity e) throws Throwable {
         String listTemplate = HandyManUtils.getFileContent(Constantes.LIST_TEMPLATE);
         String tableHeadTemplate = HandyManUtils.getFileContent(Constantes.TABLEHEAD_TEMPLATE);
-        String tableBodyTemplate=HandyManUtils.getFileContent(Constantes.TABLEBODY_TEMPLATE);
+        String tableBodyTemplate = HandyManUtils.getFileContent(Constantes.TABLEBODY_TEMPLATE);
         String fkGetterTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FK);
         String finalContent = "";
-        String tablehead="",tablebody="",fkGetters = "";
+        String tablehead = "", tablebody = "", fkGetters = "";
         FrontPage form = langage.getPages().get("form");
         String typeFile = langage.getFolders().get("type");
-        // List<PageImport> imports = langage.getPages().get("form").getImports();
-        
         int columnCount = 0;
         for (EntityField field : e.getFields()) {
             
@@ -231,11 +231,12 @@ public class FrontGeneration {
                 listTemplate = listTemplate.replace("[fieldpk]", field.getName());
                 listTemplate= listTemplate.replace("[entityFkFieldPk]", field.getName());
 
-            }  else {
+            } else {
                 String start = "%%tableHead%%";
                 String end = "%%endtableHead%%";
-                
+
                 String fieldHeadTemplate = FrontGeneration.extractPartTemplate(start, end, tableHeadTemplate).group(1);
+
             
                 String fieldHead = fieldHeadTemplate.replace("[field]", HandyManUtils.majStart(field.getName()));
                 tablehead+=fieldHead;
@@ -256,11 +257,12 @@ public class FrontGeneration {
                         tablebody+=fieldBodyNoFk;
                     }    
 
+
             }
             columnCount++;
-            
-            
+
         }
+
                     tablehead+=("<TableCell colSpan={2} className=\"text-center\">Actions</TableCell>");
         
         form.addImports(langage.getOptionalImports().get("select"));
@@ -270,6 +272,7 @@ public class FrontGeneration {
             }
         }, "../../" + typeFile.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName())));
         form.addImport(p);
+
 
         listTemplate = listTemplate.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName()));
         listTemplate = listTemplate.replace("[entityMin]", HandyManUtils.minStart(e.getClassName()));

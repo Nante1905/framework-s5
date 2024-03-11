@@ -24,7 +24,7 @@
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="[inputLabel]"
-                  {...register("[field]")}
+                  {...register("[field].[entityFkFieldPk]")}
                   defaultValue={
                     formState.defaultValues?.["[entityFkField]"]?.["[entityFkFieldPk]"]
                   }
@@ -63,4 +63,4 @@
           </LocalizationProvider>
       </FormControl>
     </div>
-    &&endinputDate&&
+    &&endInputDate&&

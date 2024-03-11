@@ -36,3 +36,5 @@
 
 - ilay status amin'ilay exception
 - génération code asiana meethod ny URLMapping
+
+front: json tsotra no alefa amlay post sy put

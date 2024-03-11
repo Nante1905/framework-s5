@@ -65,7 +65,6 @@
         "import eriq.flamework.annotations.Singleton;",
         "import eriq.flamework.annotations.URLMapping;",
         "import eriq.flamework.model.ModelRest;",
-        "import eriq.flamework.model.ModelView;",
         "import eriq.flamework.servlet.ServletEntity;",
         "import veda.godao.DAO;",
         "import veda.godao.utils.DAOConnexion;",
@@ -73,7 +72,10 @@
         "import [projectNameMin].entities.[classNameMaj];",
         "import jakarta.servlet.http.HttpServletResponse;",
         "import org.postgresql.util.PSQLException;",
-        "import eriq.flamework.dao.DatabaseInfo;"
+        "import eriq.flamework.dao.DatabaseInfo;",
+        "import constants.Constant;",
+        "import veda.godao.utils.Paginated;",
+        "import handyman.Utils;"
       ],
       "controllerAnnotations": ["@Controller", "@Singleton"],
       "controllerExtends": "",

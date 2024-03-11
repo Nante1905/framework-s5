@@ -8,8 +8,18 @@ public ModelRest crudpage(ServletEntity entity){
             [classNameMaj][] o=dao.select(connex, [classNameMaj].class, where);
             model.addItem("data", o);
         } else {
-            [classNameMaj][] o=dao.select(connex, [classNameMaj].class);
-            model.addItem("data", o);
+            if (entity.getData().get("page") != null) {
+                int page = Integer.parseInt(entity.getData().get("page"));
+                int taille = Constant.TAILLE_PAGE;
+                if (entity.getData().get("taille") != null) {
+                    taille = Integer.parseInt(entity.getData().get("taille"));
+                }
+                Paginated<[classNameMaj]> o = dao.select(connex, [classNameMaj].class, page, taille);
+                model.addItem("data", o);
+            } else {
+                [classNameMaj][] o=dao.select(connex, [classNameMaj].class);
+                model.addItem("data", o);
+            }
         }
         return model;
     } catch (Exception e) {
@@ -25,3 +35,4 @@ public ModelRest crudpage(ServletEntity entity){
         return model;
     }
 }
+
