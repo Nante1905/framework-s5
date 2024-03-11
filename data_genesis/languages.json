@@ -65,7 +65,6 @@
         "import eriq.flamework.annotations.Singleton;",
         "import eriq.flamework.annotations.URLMapping;",
         "import eriq.flamework.model.ModelRest;",
-        "import eriq.flamework.model.ModelView;",
         "import eriq.flamework.servlet.ServletEntity;",
         "import veda.godao.DAO;",
         "import veda.godao.utils.DAOConnexion;",
