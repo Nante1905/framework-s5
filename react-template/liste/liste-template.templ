@@ -136,7 +136,7 @@ const [entityMaj]Liste = () => {
             <>
 
             <div className="list-tab">
-            <Tale>
+            <Table>
               <TableHead>
                 <tableHead>
                 <TableCell colSpan={2} className="text-center">Actions</TableCell>
@@ -183,7 +183,7 @@ const [entityMaj]Liste = () => {
                    {/* AJOUT/UPDATE MODAL */}
               <Dialog open={state.openForm} className="form-dialog">
                 <DialogContent>
-                  <[entityMaj]Form id={state.[fieldpk]} />
+                  <[entityMaj]Form id={state.id} />
                   <div className="vertical-margin">
                     <Button
                       variant="contained"
@@ -221,7 +221,7 @@ const [entityMaj]Liste = () => {
                           openDelete: false,
                         }))
                       }
-                      onConfirm={() => onDelete(state.[fieldpk] as string)}
+                      onConfirm={() => onDelete(state.id as string)}
                       loading={state.laodingDelete}
                     />
                   </DialogContent>

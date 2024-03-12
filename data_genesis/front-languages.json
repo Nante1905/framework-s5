@@ -31,7 +31,7 @@
     "folders": {
       "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
       "form": "components/[entityMin]/[entityMin]-form.component.tsx",
-      "type": "shared/types/[entityMaj].ts",
+      "type": "shared/types/[entityMaj]",
       "formComponentName": "[entityMaj]Form",
       "formComponent": "[entityMin]-form.component"
     },
@@ -130,6 +130,10 @@
           }
         ]
       },
+      "type": {
+        "name": "[entityMaj].ts",
+        "path": "[projectName]/[projectFrontName]/src/shared/types/[entityMaj].ts"
+      },
       "form": {
         "name": "[entity]-form.component",
         "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form.component.tsx",
@@ -146,7 +150,7 @@
           },
           {
             "type": "member",
-            "elements": ["FormEvent", "useEffect", "useState"],
+            "elements": ["useEffect", "useState"],
             "source": "react"
           },
           {
@@ -175,6 +179,16 @@
         "name": "[entity]-liste.component",
         "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste.component.tsx",
         "imports": [
+          {
+            "type": "single",
+            "elements": ["DeleteForeverIcon"],
+            "source": "@mui/icons-material/DeleteForever"
+          },
+          {
+            "type": "single",
+            "elements": ["EditIcon"],
+            "source": "@mui/icons-material/Edit"
+          },
           {
             "type": "member",
             "elements": [

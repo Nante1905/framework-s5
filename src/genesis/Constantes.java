@@ -22,5 +22,7 @@ public class Constantes {
     public static final String FRONT_TEMPLATE_LOADING = FRONT_TEMPLATE_DIR + "/form/loading-template.templ";
     public static final String FRONT_TEMPLATE_FK = FRONT_TEMPLATE_DIR + "/form/foreignKey-getter-template.templ";
     public static final String INPUT_TYPES = FRONT_TEMPLATE_DIR + "/input-types.json";
+    public static final String FRONT_TEMPLATE_TYPE = FRONT_TEMPLATE_DIR + "/types-template.templ";
+
     public static final int TAILLE_PAGE = 5;
 }

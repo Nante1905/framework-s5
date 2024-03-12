@@ -40,6 +40,21 @@ public class FrontGeneration {
         view.generateFile();
     }
 
+    public static EntityComponent generateType(FrontLangage langage, Entity e) throws Throwable {
+        String typeTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_TYPE);
+        Matcher fieldMatcher = extractPartTemplate("&&startField&&\n", "\n&&endField&&", typeTemplate);
+        String fieldTemplate = fieldMatcher.group(1);
+        String content;
+        content = typeTemplate.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName()));
+        @SuppressWarnings("unchecked")
+        HashMap<String, String> inputTypes = HandyManUtils.fromJson(HashMap.class,
+                HandyManUtils.getFileContent(Constantes.INPUT_TYPES));
+        // for (EntityField f : e.getFields()) {
+
+        // }
+        return new EntityComponent();
+    }
+
     public static EntityComponent generateForm(FrontLangage langage, Entity e) throws Throwable {
         System.out.println("Generating form for " + e.getClassName());
         String formTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FORM);
@@ -51,7 +66,8 @@ public class FrontGeneration {
         FrontPage form = langage.getPages().get("form");
         String typeFile = langage.getFolders().get("type");
 
-        // List<PageImport> imports = langage.getPages().get("form").getImports();
+        // List<PageImport> defaultImports =
+        // langage.getPages().get("form").getImports();
 
         @SuppressWarnings("unchecked")
         HashMap<String, String> inputTypes = HandyManUtils.fromJson(HashMap.class,
@@ -126,6 +142,7 @@ public class FrontGeneration {
         EntityComponent component = new EntityComponent();
         component.setContent(finalContent);
         component.setPath(form.getPath().replace("[entityMin]", HandyManUtils.minStart(e.getClassName())));
+
         return component;
     }
 
@@ -214,8 +231,7 @@ public class FrontGeneration {
         String fkGetterTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_FK);
         String finalContent = "";
         String tablehead = "", tablebody = "", fkGetters = "";
-        // FIX: ampiany ilay liste import nefa efa entité samy hafa, tsy haiko hoe
-        // instance ray foana ve no ampiasainy,
+
         FrontPage listePage = langage.getPages().get("list");
         listePage.setName(listePage.getName().replace("[entity]", e.getClassName().toLowerCase()));
         System.out.println(listePage.getImports().size());
@@ -300,6 +316,7 @@ public class FrontGeneration {
         EntityComponent component = new EntityComponent();
         component.setContent(finalContent);
         component.setPath(listePage.getPath().replace("[entityMin]", HandyManUtils.minStart(e.getClassName())));
+
         return component;
     }
 }
