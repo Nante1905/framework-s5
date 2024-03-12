@@ -11,6 +11,7 @@ public class FrontPage {
     List<PageImport> imports;
 
     public void addImports(List<PageImport> a) {
+        name = name + "h";
         for (PageImport p : a) {
             addImport(p);
         }

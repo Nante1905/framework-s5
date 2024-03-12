@@ -31,7 +31,9 @@
     "folders": {
       "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
       "form": "components/[entityMin]/[entityMin]-form.component.tsx",
-      "type": "shared/types/[entityMaj].ts"
+      "type": "shared/types/[entityMaj].ts",
+      "formComponentName": "[entityMaj]Form",
+      "formComponent": "[entityMin]-form.component"
     },
     "files": {
       "env": "src/shared/env/env.ts"
@@ -143,11 +145,6 @@
             "source": "axios"
           },
           {
-            "type": "single",
-            "elements": ["qs"],
-            "source": "qs"
-          },
-          {
             "type": "member",
             "elements": ["FormEvent", "useEffect", "useState"],
             "source": "react"
@@ -205,11 +202,6 @@
             "source": "lodash"
           },
           {
-            "type": "single",
-            "elements": ["qs"],
-            "source": "qs"
-          },
-          {
             "type": "member",
             "elements": ["useEffect", "useState"],
             "source": "react"
@@ -241,11 +233,6 @@
           {
             "type": "global",
             "source": "../../theme/list.scss"
-          },
-          {
-            "type": "single",
-            "elements": ["[entityMaj]Form"],
-            "source": "./[entityMin]-form.component"
           }
         ]
       }

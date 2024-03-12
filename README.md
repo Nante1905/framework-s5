@@ -38,3 +38,7 @@
 - génération code asiana meethod ny URLMapping
 
 front: json tsotra no alefa amlay post sy put
+
+- bug import
+- génération interface
+- lay landing page sy fanovana mbola tsy tafiditra

@@ -23,6 +23,7 @@ const initialState : [entityMaj]ListeState = {
 }
 
 const [entityMaj]Liste = () => {
+  document.title = "[entityReadable]";
   const [state, setState] = useState<[entityMaj]ListeState>(initialState);
   useEffect(() => {
     setState((state) => ({
@@ -85,10 +86,8 @@ const [entityMaj]Liste = () => {
       loadingDelete: true,
     }));
     const options = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify({ [entityFkFieldPk]: id }),
-      url: `${URL_API}/delete[entityMin].do`,
+      method: "DELETE",
+      url: `${URL_API}/delete[entityMin].do?[entityFkFieldPk]=${id}`
     };
     axios(options)
       .then((res) => {
@@ -127,7 +126,7 @@ const [entityMaj]Liste = () => {
       <div>
         <div className="crud-list-container">
           <div className="list-actions inline-flex-end">
-            <Button variant="contained" onClick={() => openForm()}>
+            <Button variant="contained" onClick={() => openForm()} className="btn">
               Ajouter
             </Button>
           </div>
@@ -137,45 +136,48 @@ const [entityMaj]Liste = () => {
             <>
 
             <div className="list-tab">
-            <Table>
-                <TableHead>
-                  <tableHead>
-                </TableHead>
-                       {state.data.map((d, index) => (
-                      <TableRow
-                        key={`d_${index}`}
-                        className={
-                          state.id
-                            ? Number(state.id) === d.[fieldpk]
-                              ? "selected"
-                              : ""
-                            : ""
+            <Tale>
+              <TableHead>
+                <tableHead>
+                <TableCell colSpan={2} className="text-center">Actions</TableCell>
+              </TableHead>
+              <TableBody>
+                {state.data.map((d, index) => (
+                  <TableRow
+                    key={`d_${index}`}
+                    className={
+                      state.id
+                        ? Number(state.id) === d.[fieldpk]
+                          ? "selected"
+                          : ""
+                        : ""
+                    }
+                  >
+                    <tableBody>
+                    <Tooltip title={"Modifier"}>
+                      <Button
+                        onClick={() =>
+                          openForm((d.[fieldpk] as number).toString())
                         }
                       >
-                          <tableBody>
-                    <Tooltip title={"Modifier"}>
-                            <Button
-                              onClick={() =>
-                                openForm((d.[fieldpk] as number).toString())
-                              }
-                            >
-                              <EditIcon />
-                            </Button>
-                          </Tooltip>
-                          <Tooltip title={"Supprimer"}>
-                            <Button
-                              className="danger"
-                              onClick={() =>
-                                openDeleteForm(
-                                  (d.[fieldpk] as number).toString()
-                                )
-                              }
-                            >
-                              <DeleteForeverIcon />
-                            </Button>
-                          </Tooltip>
-                          </TableRow>
-                            ))}
+                        <EditIcon />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title={"Supprimer"}>
+                      <Button
+                        className="danger"
+                        onClick={() =>
+                          openDeleteForm(
+                            (d.[fieldpk] as number).toString()
+                          )
+                        }
+                      >
+                        <DeleteForeverIcon />
+                      </Button>
+                    </Tooltip>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
             </div>
                    {/* AJOUT/UPDATE MODAL */}
@@ -250,6 +252,7 @@ const [entityMaj]Liste = () => {
         message={state.success as string}
       />
     </>
-        );
-    
+  );
 };
+
+export default [entityMaj]Liste;

@@ -297,6 +297,9 @@ public class App {
                                                 // HandyManUtils.createFile(viewFile);
                                                 HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                                 HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
+                                                System.out.println("Generating entity : " +
+                                                                entities[i].getTableName());
+
                                                 FrontGeneration.generateView(frontLangage, entities[i], projectName,
                                                                 projectFrontName);
                                                 // HandyManUtils.overwriteFileContent(viewFile, views[i]);
