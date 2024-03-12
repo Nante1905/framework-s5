@@ -1,0 +1,11 @@
+{
+  "Integer": "number",
+  "int": "number",
+  "Double": "number",
+  "double": "number",
+  "float": "number",
+  "Float": "number",
+  "String": "string",
+  "java.time.LocalDate": "string",
+  "java.time.LocalDateTime": "string"
+}

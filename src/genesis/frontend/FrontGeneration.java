@@ -37,22 +37,54 @@ public class FrontGeneration {
         liste.setPath(liste.getPath().replace("[projectName]", projectName)
                 .replace("[projectFrontName]", projectFrontName));
         view.addComponents(liste);
+
+        EntityComponent type = generateType(langage, e);
+        type.setPath(type.getPath().replace("[projectName]", projectName)
+                .replace("[projectFrontName]", projectFrontName));
+        view.addComponents(type);
+
         view.generateFile();
     }
 
     public static EntityComponent generateType(FrontLangage langage, Entity e) throws Throwable {
         String typeTemplate = HandyManUtils.getFileContent(Constantes.FRONT_TEMPLATE_TYPE);
-        Matcher fieldMatcher = extractPartTemplate("&&startField&&\n", "\n&&endField&&", typeTemplate);
-        String fieldTemplate = fieldMatcher.group(1);
+        Matcher fieldMatcher = extractPartTemplate("&&field&&", "&&endField&&", typeTemplate);
+        String fieldTemplate = fieldMatcher.group(1).substring(1);
         String content;
         content = typeTemplate.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName()));
+        FrontPage typeFile = langage.getPages().get("type");
+
         @SuppressWarnings("unchecked")
         HashMap<String, String> inputTypes = HandyManUtils.fromJson(HashMap.class,
-                HandyManUtils.getFileContent(Constantes.INPUT_TYPES));
-        // for (EntityField f : e.getFields()) {
+                HandyManUtils.getFileContent(Constantes.FIELD_TYPES));
+        String fieldContents = "";
+        for (EntityField f : e.getFields()) {
+            System.out.println(f.getType());
+            if (f.isForeign()) {
+                fieldContents += fieldTemplate.replace("[field]", f.getName()).replace("[fieldType]",
+                        f.getType());
+                // add Import
+                PageImport p = new PageImport("member", new ArrayList<String>() {
+                    {
+                        add(HandyManUtils.majStart(f.getType()));
+                    }
+                }, "./" + typeFile.getName().replace("[entityMaj]", HandyManUtils.majStart(f.getType())));
 
-        // }
-        return new EntityComponent();
+                typeFile.addImport(p);
+            } else {
+                fieldContents += fieldTemplate.replace("[field]", f.getName()).replace("[fieldType]",
+                        inputTypes.get(f.getType()));
+            }
+        }
+        fieldContents += fieldTemplate.replace("[field]", "label").replace("[fieldType]", "string");
+
+        String imports = generateImport(langage, typeFile.getImports());
+        content = content.replace("<import>", imports);
+        content = content.replace(fieldMatcher.group(0), fieldContents);
+        EntityComponent type = new EntityComponent();
+        type.setContent(content);
+        type.setPath(typeFile.getPath().replace("[entityMaj]", HandyManUtils.majStart(e.getClassName())));
+        return type;
     }
 
     public static EntityComponent generateForm(FrontLangage langage, Entity e) throws Throwable {
@@ -183,7 +215,7 @@ public class FrontGeneration {
         while (m.find()) {
             return m;
         }
-        throw new Exception("Nothing is between the startKey and endKey");
+        throw new Exception("Nothing is between " + startKey + " and " + endKey);
     }
 
     public static String generateImport(FrontLangage langage, List<PageImport> toImports) throws Throwable {
@@ -234,8 +266,6 @@ public class FrontGeneration {
 
         FrontPage listePage = langage.getPages().get("list");
         listePage.setName(listePage.getName().replace("[entity]", e.getClassName().toLowerCase()));
-        System.out.println(listePage.getImports().size());
-        System.out.println(listePage.getName());
         String typeFile = langage.getFolders().get("type");
         int columnCount = 0;
 
@@ -261,19 +291,19 @@ public class FrontGeneration {
                         .group(1);
 
                 if (field.isForeign()) {
-                    String fieldbody = fieldBodyTemplate.replace("[field]", field.getName())
+                    String fieldbody = fieldBodyTemplate.replace("[field]", field.getName() + "?")
                             .replace("[field2]", "label");
                     tablebody += fieldbody.substring(0, fieldbody.length() - 1);
                     fkGetters += FrontGeneration.generateForeignGetter(e.getColumns()[columnCount], fkGetterTemplate);
 
                     // import fk type
-                    PageImport p = new PageImport("member", new ArrayList<String>() {
-                        {
-                            add(HandyManUtils.majStart(field.getType()));
-                        }
-                    }, "../../" + typeFile.replace("[entityMaj]",
-                            HandyManUtils.majStart(field.getType())));
-                    listePage.addImport(p);
+                    // PageImport p = new PageImport("member", new ArrayList<String>() {
+                    // {
+                    // add(HandyManUtils.majStart(field.getType()));
+                    // }
+                    // }, "../../" + typeFile.replace("[entityMaj]",
+                    // HandyManUtils.majStart(field.getType())));
+                    // listePage.addImport(p);
                 } else {
                     String fieldBodyNoFk = fieldBodyTemplate.replace("[field]", field.getName())
                             .replace("." + "[field2]", "");
@@ -294,7 +324,7 @@ public class FrontGeneration {
         listePage.addImport(p);
 
         // import form component
-        listePage.addImport(new PageImport("member", new ArrayList<String>() {
+        listePage.addImport(new PageImport("single", new ArrayList<String>() {
             {
                 add(langage.getFolders().get("formComponentName").replace("[entityMaj]",
                         HandyManUtils.majStart(e.getClassName())));
@@ -311,7 +341,6 @@ public class FrontGeneration {
         listTemplate = listTemplate.replace("<foreignKeyGetter>", fkGetters);
         listTemplate = listTemplate.replace("<import>", generateImport(langage, listePage.getImports()));
         finalContent = listTemplate;
-        System.out.println("fin " + listePage.getName());
 
         EntityComponent component = new EntityComponent();
         component.setContent(finalContent);

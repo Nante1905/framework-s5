@@ -9,6 +9,9 @@ interface [entityMaj]ListeState {
   id: string | undefined;
   openDelete: boolean;
   laodingDelete: boolean;
+  page: number;
+  pageSize: number;
+  total: number;
 }
 
 const initialState : [entityMaj]ListeState = {
@@ -20,6 +23,9 @@ const initialState : [entityMaj]ListeState = {
   id: undefined,
   openDelete: false,
   laodingDelete: false,
+  page: 1,
+  pageSize: 0,
+  total: 0
 }
 
 const [entityMaj]Liste = () => {
@@ -32,15 +38,22 @@ const [entityMaj]Liste = () => {
       error: null,
       success: null,
     }));
+    let url = `${URL_API}/produit.do?page=${state.page}`;
+    if (state.pageSize > 0) {
+      url += `&taille=${state.pageSize}`;
+    }
     axios
-      .get(`${URL_API}/[entityMin].do`)
+      .get(url)
       .then((res) => {
         console.log(res.data);
+        const response = res.data.data;
 
         setState((state) => ({
           ...state,
-          data: res.data.data,
+          data: response.items,
           loading: false,
+          total: response.total,
+          pageSize: response.pageSize,
         }));
       })
       .catch((err) => {
@@ -58,10 +71,9 @@ const [entityMaj]Liste = () => {
           loading: false,
         }));
       });
-  }, []);
+  }, [state.page, state.pageSize]);
 
 
-  
   const openForm = (id?: string) => {
     setState((state) => ({
       ...state,
@@ -154,27 +166,31 @@ const [entityMaj]Liste = () => {
                     }
                   >
                     <tableBody>
-                    <Tooltip title={"Modifier"}>
-                      <Button
-                        onClick={() =>
-                          openForm((d.[fieldpk] as number).toString())
-                        }
-                      >
-                        <EditIcon />
-                      </Button>
-                    </Tooltip>
-                    <Tooltip title={"Supprimer"}>
-                      <Button
-                        className="danger"
-                        onClick={() =>
-                          openDeleteForm(
-                            (d.[fieldpk] as number).toString()
-                          )
-                        }
-                      >
-                        <DeleteForeverIcon />
-                      </Button>
-                    </Tooltip>
+                    <TableCell className="text-center">
+                      <Tooltip title={"Modifier"}>
+                        <Button
+                          onClick={() =>
+                            openForm((d.[fieldpk] as number).toString())
+                          }
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Tooltip title={"Supprimer"}>
+                        <Button
+                          className="danger"
+                          onClick={() =>
+                            openDeleteForm(
+                              (d.[fieldpk] as number).toString()
+                            )
+                          }
+                        >
+                          <DeleteForeverIcon />
+                        </Button>
+                      </Tooltip>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -231,6 +247,23 @@ const [entityMaj]Liste = () => {
           )}
             </div>
       </div>
+      <CustomPagination
+        total={state.total}
+        page={state.page}
+        pageSize={state.pageSize}
+        changePage={(numero) => {
+          setState((state) => ({
+            ...state,
+            page: numero,
+          }));
+        }}
+        changePageSize={(size: number) => {
+          setState((state) => ({
+            ...state,
+            pageSize: size,
+          }));
+        }}
+      />
       <ErrorSnackBar
         open={state.error != null}
         onClose={() =>

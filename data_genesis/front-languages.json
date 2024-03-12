@@ -131,8 +131,9 @@
         ]
       },
       "type": {
-        "name": "[entityMaj].ts",
-        "path": "[projectName]/[projectFrontName]/src/shared/types/[entityMaj].ts"
+        "name": "[entityMaj]",
+        "path": "[projectName]/[projectFrontName]/src/shared/types/[entityMaj].ts",
+        "imports": []
       },
       "form": {
         "name": "[entity]-form.component",
@@ -247,6 +248,11 @@
           {
             "type": "global",
             "source": "../../theme/list.scss"
+          },
+          {
+            "type": "single",
+            "elements": ["CustomPagination"],
+            "source": "../../shared/components/pagination/CustomPagination"
           }
         ]
       }
