@@ -3,9 +3,6 @@
 const [entityMaj]Form = (props: [entityMaj]Props) => {
   const [state, setState] = useState<[entityMaj]State>(initialState);
   useEffect(() => {
-    <loading>
-
-<loading>
     <foreignKeyGetter>
   }, []);  
 
@@ -79,7 +76,7 @@ const [entityMaj]Form = (props: [entityMaj]Props) => {
           >
             <input>
             <div className="inline-flex-center vertical-margin">
-              <Button variant="contained" type="submit">
+              <Button variant="contained" type="submit" className="btn">
                 {formState.isSubmitting ? (
                   <CircularProgress
                     sx={{

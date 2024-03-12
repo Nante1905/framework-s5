@@ -29,16 +29,16 @@ const initialState : [entityMaj]ListeState = {
 }
 
 const [entityMaj]Liste = () => {
-  document.title = "[entityReadable]";
   const [state, setState] = useState<[entityMaj]ListeState>(initialState);
   useEffect(() => {
+    document.title = "[entityReadable]";
     setState((state) => ({
       ...state,
       loading: true,
       error: null,
       success: null,
     }));
-    let url = `${URL_API}/produit.do?page=${state.page}`;
+    let url = `${URL_API}/[entityMin].do?page=${state.page}`;
     if (state.pageSize > 0) {
       url += `&taille=${state.pageSize}`;
     }

@@ -59,7 +59,6 @@ public class FrontGeneration {
                 HandyManUtils.getFileContent(Constantes.FIELD_TYPES));
         String fieldContents = "";
         for (EntityField f : e.getFields()) {
-            System.out.println(f.getType());
             if (f.isForeign()) {
                 fieldContents += fieldTemplate.replace("[field]", f.getName()).replace("[fieldType]",
                         f.getType());
@@ -108,10 +107,11 @@ public class FrontGeneration {
         int columnCount = 0;
         for (EntityField field : e.getFields()) {
             if (field.isPrimary()) {
-                String pkInput = FrontGeneration.extractPartTemplate("&&inputPk&&", "&&endInputPk&&", inputTemplate)
-                        .group(1);
-                pkInput = pkInput.replace("[field]", field.getName());
-                inputs += pkInput;
+                // String pkInput = FrontGeneration.extractPartTemplate("&&inputPk&&",
+                // "&&endInputPk&&", inputTemplate)
+                // .group(1);
+                // pkInput = pkInput.replace("[field]", field.getName());
+                // inputs += pkInput;
 
                 formTemplate = formTemplate.replace("[entityPkField]", field.getName());
             } else if (field.isForeign()) {
@@ -333,7 +333,7 @@ public class FrontGeneration {
                 e.getClassName().toLowerCase())));
 
         listTemplate = listTemplate.replace("[entityReadable]",
-                HandyManUtils.majStart(HandyManUtils.formatReadable(e.getClassName())));
+                HandyManUtils.majStart(HandyManUtils.formatReadable(e.getClassName()).trim()));
         listTemplate = listTemplate.replace("[entityMaj]", HandyManUtils.majStart(e.getClassName()));
         listTemplate = listTemplate.replace("[entityMin]", HandyManUtils.minStart(e.getClassName()));
         listTemplate = listTemplate.replace("<tableHead>", tablehead);

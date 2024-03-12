@@ -302,8 +302,10 @@ public class App {
                         System.out.println("Generating entity : " +
                                 entities[i].getTableName());
 
-                        FrontGeneration.generateView(HandyManUtils.fromJson(FrontLangage[].class,
-                                HandyManUtils.getFileContent(Constantes.FRONT_LANGUAGE_JSON))[frontLangageNum],
+                        FrontGeneration.generateView(HandyManUtils.fromJson(
+                                FrontLangage[].class,
+                                HandyManUtils.getFileContent(
+                                        Constantes.FRONT_LANGUAGE_JSON))[frontLangageNum],
                                 entities[i], projectName,
                                 projectFrontName);
                         // HandyManUtils.overwriteFileContent(viewFile, views[i]);
@@ -369,8 +371,17 @@ public class App {
                     FrontPage landing = frontLangage.getPages().get("landingPage");
                     landing.setPath(projectName, projectFrontName, null, "tsx");
                     String landingPageContent = HandyManUtils.getFileContent(landing.getPath());
-                    landingPageContent = landingPageContent.replace("[projectName]", projectName);
+                    landingPageContent = landingPageContent.replace("[projectName]",
+                            HandyManUtils.majStart(projectName));
                     HandyManUtils.overwriteFileContent(landing.getPath(), landingPageContent);
+
+                    // Menu
+
+                    FrontPage menu = frontLangage.getPages().get("menu");
+                    menu.setPath(projectName, projectFrontName, null, "tsx");
+                    String menuContent = HandyManUtils.getFileContent(menu.getPath());
+                    menuContent = menuContent.replace("[projectNameMaj]", HandyManUtils.majStart(projectName));
+                    HandyManUtils.overwriteFileContent(menu.getPath(), menuContent);
 
                 } catch (Exception e) {
                     e.printStackTrace();
