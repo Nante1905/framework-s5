@@ -364,6 +364,14 @@ public class App {
                     HandyManUtils.createFile(pageInfo.getPath());
                     HandyManUtils.overwriteFileContent(pageInfo.getPath(), pageInfoTemplate);
 
+                    // Landing page
+
+                    FrontPage landing = frontLangage.getPages().get("landingPage");
+                    landing.setPath(projectName, projectFrontName, null, "tsx");
+                    String landingPageContent = HandyManUtils.getFileContent(landing.getPath());
+                    landingPageContent = landingPageContent.replace("[projectName]", projectName);
+                    HandyManUtils.overwriteFileContent(landing.getPath(), landingPageContent);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

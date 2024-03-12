@@ -96,6 +96,10 @@
           }
         ]
       },
+      "landingPage": {
+        "name": "LandingPage",
+        "path": "[projectName]/[projectFrontName]/src/components/landing-page/LandingPage"
+      },
       "menu": {
         "name": "Menu",
         "path": "[projectName]/[projectFrontName]/src/components",
