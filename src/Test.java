@@ -1,53 +1,46 @@
-// // import com.fasterxml.jackson.databind.ObjectMapper;
+import java.sql.Connection;
 
-// // import com.fasterxml.jackson.databind.ObjectMapper;
+import genesis.Constantes;
+import genesis.Credentials;
+import genesis.Database;
+import genesis.Entity;
+import genesis.Language;
+import genesis.frontend.FrontGeneration;
+import genesis.frontend.variables.FrontLangage;
+import handyman.HandyManUtils;
 
-// import java.io.File;
-// import java.sql.Connection;
+public class Test {
 
-// import genesis.Constantes;
-// import genesis.Credentials;
-// import genesis.Database;
-// import genesis.Entity;
-// import genesis.Language;
-// import genesis.frontend.FrontGeneration;
-// import genesis.frontend.variables.FrontLangage;
-// import handyman.HandyManUtils;
+        public static void main(String[] args) throws Throwable {
 
-// public class Test {
+                Database[] databases = HandyManUtils.fromJson(Database[].class,
+                                HandyManUtils.getFileContent(Constantes.DATABASE_JSON));
+                Language[] languages = HandyManUtils.fromJson(Language[].class,
+                                HandyManUtils.getFileContent(Constantes.LANGUAGE_JSON));
+                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost";
+                boolean useSSL = false, allowPublicKeyRetrieval = true;
+                Credentials credentials = new Credentials(databaseName, user, pwd, host,
+                                "5432", useSSL,
+                                allowPublicKeyRetrieval);
+                Database database = databases[0];
+                Language language = languages[0];
+                Connection connect = database.getConnexion(credentials);
 
-// public static void main(String[] args) throws Throwable {
+                Entity[] entities = database.getEntities(connect, credentials, "*");
+                for (Entity entity : entities) {
+                        entity.initialize(connect, credentials, database, language);
+                        System.out.println("Generating entity : " + entity.getTableName());
+                        FrontGeneration.generateView(HandyManUtils.fromJson(FrontLangage[].class,
+                                        HandyManUtils.getFileContent(Constantes.FRONT_LANGUAGE_JSON))[0], entity,
+                                        "akanjov3", "akanjov3-front");
+                }
 
-// Database[] databases = HandyManUtils.fromJson(Database[].class,
-// HandyManUtils.getFileContent(Constantes.DATABASE_JSON));
-// Language[] languages = HandyManUtils.fromJson(Language[].class,
-// HandyManUtils.getFileContent(Constantes.LANGUAGE_JSON));
-// String databaseName = "akanjo", user = "postgres", pwd = "2003", host =
-// "localhost";
-// boolean useSSL = false, allowPublicKeyRetrieval = true;
-// Credentials credentials = new Credentials(databaseName, user, pwd, host,
-// "5432", useSSL,
-// allowPublicKeyRetrieval);
-// Database database = databases[0];
-// Language language = languages[0];
-// Connection connect = database.getConnexion(credentials);
+                // System.out.println("Generating entity : " + entities[2].getTableName());
+                // FrontGeneration.generateView(HandyManUtils.fromJson(FrontLangage[].class,
+                // HandyManUtils.getFileContent(Constantes.FRONT_LANGUAGE_JSON))[0],
+                // entities[2],
+                // "akanjov3", "akanjov3-front");
 
-// Entity[] entities = database.getEntities(connect, credentials, "*");
-// for (Entity entity : entities) {
-// entity.initialize(connect, credentials, database, language);
-// }
+        }
 
-// System.out.println("Generating entity : " + entities[1].getTableName());
-// String generated =
-// FrontGeneration.generateForm(HandyManUtils.fromJson(FrontLangage[].class,
-// HandyManUtils.getFileContent(Constantes.FRONT_LANGUAGE_JSON))[0],
-// entities[1]);
-
-// File file = new File("test.tsx");
-// file.createNewFile();
-
-// HandyManUtils.overwriteFileContent("test.tsx", generated);
-
-// }
-
-// }
+}

@@ -1,36 +1,59 @@
-import {
-  Button,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogContent, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import axios from "axios";
-import qs from "qs";
+import _ from "lodash";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import ErrorSnackBar from "../../shared/components/snackbar/ErrorSnackBar";
 import SuccessSnackBar from "../../shared/components/snackbar/SuccessSnackBar";
+import DeleteModal from "../../shared/components/deleteModal/delete-modal.component";
 import { URL_API } from "../../shared/env/env";
+import "../../theme/form.scss";
+import "../../theme/list.scss";
 import { Marque } from "../../shared/types/Marque.ts";
+import { Produit } from "../../shared/types/Produit.ts";
+import { ProduitForm } from "./produit-form.component";
 
-const ProduitForm = (props: ProduitProps) => {
-  const [state, setState] = useState<ProduitState>(initialState);
+
+interface ProduitListeState {
+  data: Produit[];
+  loading: boolean;
+  error: string | null;
+  success: string | null;
+  openForm: boolean;
+  id: string | undefined;
+  openDelete: boolean;
+  laodingDelete: boolean;
+}
+
+const initialState : ProduitListeState = {
+  data: [],
+  loading: false,
+  error: null,
+  success: null,
+  openForm: false,
+  id: undefined,
+  openDelete: false,
+  laodingDelete: false,
+}
+
+const ProduitListe = () => {
+  document.title = " produit";
+  const [state, setState] = useState<ProduitListeState>(initialState);
   useEffect(() => {
     setState((state) => ({
       ...state,
       loading: true,
+      error: null,
+      success: null,
     }));
-
     axios
-      .get(`${URL_API}/marque.do`)
+      .get(`${URL_API}/produit.do`)
       .then((res) => {
+        console.log(res.data);
+
         setState((state) => ({
           ...state,
+          data: res.data.data,
           loading: false,
-          marque: res.data.data,
         }));
       })
       .catch((err) => {
@@ -50,130 +73,187 @@ const ProduitForm = (props: ProduitProps) => {
       });
   }, []);
 
-  const onSubmit = async (data: any) => {
+
+  
+  const openForm = (id?: string) => {
     setState((state) => ({
       ...state,
-      sendLoading: true,
+      openForm: true,
+      id: id,
     }));
-    let url = `${URL_API}/insertproduit.do`;
-    if (props.id) {
-      url = `${URL_API}/updateproduit.do`;
-    }
-    const options = {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      data: qs.stringify({
-        ...data,
-      }),
-      url,
-    };
-    const res = await axios(options);
-    console.log(res);
-    if (!res.data.data) {
-      setState((state) => ({
-        ...state,
-        error: (res.data as string).includes("Exception")
-          ? "Une erreur s'est produite"
-          : res.data,
-      }));
-    } else {
-      setState((state) => ({
-        ...state,
-        success: "Enregistré",
-      }));
-    }
   };
 
-  const { register, formState, handleSubmit, control } = useForm({
-    defaultValues: props.id
-      ? async () =>
-          (await axios.get(`${URL_API}/produit.do?idproduit=${props.id}`)).data
-            .data?.[0]
-      : undefined,
-  });
-  const sleep = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
+  const openDeleteForm = (id?: string) => {
+    setState((state) => ({
+      ...state,
+      id: id,
+      openDelete: true,
+    }));
+  };
 
-  return (
+   const onDelete = (id: string) => {
+    console.log("DELETE");
+
+    setState((state) => ({
+      ...state,
+      loadingDelete: true,
+    }));
+    const options = {
+      method: "DELETE",
+      url: `${URL_API}/deleteproduit.do?idproduit=${id}`
+    };
+    axios(options)
+      .then((res) => {
+        console.log(res);
+
+        setState((state) => ({
+          ...state,
+          success: "Suppression réussie",
+          loadingDelete: false,
+          openDelete: false,
+        }));
+        _.remove(state.data, (value) => value?.idproduit === Number(state.id));
+      })
+      .catch((err) => {
+        console.error(err);
+
+        let errorMessage = "Une erreur s'est produite";
+        if (
+          err.response?.data.err &&
+          err.response?.data.err != "" &&
+          err.response?.data.err != null  
+        ) {
+          errorMessage = err.response.data.err;
+        }
+        setState((state) => ({
+          ...state,
+          error: errorMessage,
+          loadingDelete: false,
+          openDelete: false,
+        }));
+      });
+  };
+
+    return (
     <>
-      <div className="crud-form-wrapper">
-        <h1 className="text-center">
-          {props.id ? "Modification" : "Création"} Produit
-        </h1>
-        {state.loading || formState.isLoading ? (
-          <CircularProgress />
-        ) : (
-          <form
-            className="form-content"
-            onSubmit={handleSubmit(async (data) => {
-              console.log(data);
-              await onSubmit(data);
-            })}
-          >
-            <div className="form-input">
-              <input type="hidden" {...register("idproduit")} />
-            </div>
+      <div>
+        <div className="crud-list-container">
+          <div className="list-actions inline-flex-end">
+            <Button variant="contained" onClick={() => openForm()} className="btn">
+              Ajouter
+            </Button>
+          </div>
+          {state.loading ? (
+            <CircularProgress className="text-center" />
+          ) : (
+            <>
 
-            <div className="form-input">
-              <TextField label="Nom" {...register("nom")} />
-            </div>
-
-            <div className="form-input">
-              <TextField label="Prix" {...register("prix")} />
-            </div>
-
-            <div className="form-input">
-              {state.loading ? (
-                <CircularProgress />
-              ) : (
-                <FormControl sx={{ width: 200 }}>
-                  <InputLabel id="demo-simple-select-label">Marque</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Marque"
-                    {...register("marque")}
-                    defaultValue={
-                      formState.defaultValues?.["marque"]?.["idmarque"]
+            <div className="list-tab">
+            <Tale>
+              <TableHead>
+                
+                <TableCell> Nom </TableCell>
+                <TableCell> Prix </TableCell>
+                <TableCell> Marque </TableCell>
+                <TableCell> Disponibilite </TableCell>
+                <TableCell colSpan={2} className="text-center">Actions</TableCell>
+              </TableHead>
+              <TableBody>
+                {state.data.map((d, index) => (
+                  <TableRow
+                    key={`d_${index}`}
+                    className={
+                      state.id
+                        ? Number(state.id) === d.idproduit
+                          ? "selected"
+                          : ""
+                        : ""
                     }
                   >
-                    {state.marque?.map((e: Marque, i) => (
-                      <MenuItem key={`fk${i}`} value={e?.idmarque}>
-                        {e.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
+                    
+                  <TableCell>{d.nom}</TableCell>
+                  <TableCell>{d.prix}</TableCell>
+                  <TableCell>{d.marque.label}</TableCell>
+                  <TableCell>{d.disponibilite}</TableCell>
+                    <Tooltip title={"Modifier"}>
+                      <Button
+                        onClick={() =>
+                          openForm((d.idproduit as number).toString())
+                        }
+                      >
+                        <EditIcon />
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title={"Supprimer"}>
+                      <Button
+                        className="danger"
+                        onClick={() =>
+                          openDeleteForm(
+                            (d.idproduit as number).toString()
+                          )
+                        }
+                      >
+                        <DeleteForeverIcon />
+                      </Button>
+                    </Tooltip>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
             </div>
-
-            <div className="form-input">
-              <TextField
-                label="Disponibilite"
-                type="number"
-                {...register("disponibilite")}
-              />
+                   {/* AJOUT/UPDATE MODAL */}
+              <Dialog open={state.openForm} className="form-dialog">
+                <DialogContent>
+                  <ProduitForm id={state.idproduit} />
+                  <div className="vertical-margin">
+                    <Button
+                      variant="contained"
+                      onClick={() =>
+                        setState((state) => ({
+                          ...state,
+                          openForm: false,
+                        }))
+                      }
+                    >
+                      Annuler
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+                {/* DELETE MODAL */}
+              <div>
+                <Dialog
+                  open={state.openDelete}
+                  className="form-dialog delete-dialog"
+                  sx={{
+                    topScrollPaper: {
+                      alignItems: "flex-start",
+                    },
+                    topPaperScrollBody: {
+                      verticalAlign: "top",
+                    },
+                  }}
+                >
+                 <DialogContent>
+                    <DeleteModal
+                      onClose={() =>
+                        setState((state) => ({
+                          ...state,
+                          openDelete: false,
+                        }))
+                      }
+                      onConfirm={() => onDelete(state.idproduit as string)}
+                      loading={state.laodingDelete}
+                    />
+                  </DialogContent>
+                </Dialog>
+                  </div>
+            </>
+          )}
             </div>
-
-            <div className="inline-flex-center vertical-margin">
-              <Button variant="contained" type="submit">
-                {formState.isSubmitting ? (
-                  <CircularProgress
-                    sx={{
-                      width: "20px !important",
-                      height: "20px !important",
-                      color: "white",
-                    }}
-                  />
-                ) : (
-                  <>Valider</>
-                )}
-              </Button>
-            </div>
-          </form>
-        )}
       </div>
       <ErrorSnackBar
-        open={state.error !== null}
+        open={state.error != null}
         onClose={() =>
           setState(() => ({
             ...state,
@@ -183,7 +263,7 @@ const ProduitForm = (props: ProduitProps) => {
         error={state.error as string}
       />
       <SuccessSnackBar
-        open={state.success !== null}
+        open={state.success != null}
         onClose={() =>
           setState(() => ({
             ...state,
@@ -196,26 +276,4 @@ const ProduitForm = (props: ProduitProps) => {
   );
 };
 
-interface ProduitProps {
-  id?: string;
-  onClose?: () => void;
-}
-
-interface ProduitState {
-  loading: boolean;
-  sendLoading: boolean;
-  error: string | null;
-  success: string | null;
-  marque: Marque[];
-}
-
-const initialState: ProduitState = {
-  loading: false,
-  sendLoading: false,
-  error: null,
-  success: null,
-  marque: [],
-};
-
-export default ProduitForm;
-
+export default ProduitListe;
