@@ -29,9 +29,9 @@ public class App {
                 Database database;
                 Language language;
                 FrontLangage frontLangage;
-                String databaseName = "akanjo", user = "postgres", pwd = "2003", host = "localhost", port = "5432";
+                String databaseName, user, pwd, host, port = "5432";
                 boolean useSSL = false, allowPublicKeyRetrieval = true;
-                String projectName = "akanjov3", entityName = "*";
+                String projectName, entityName;
                 Credentials credentials;
                 String projectNameTagPath, projectNameTagContent;
                 File project, credentialFile, apiProject, frontProject;
@@ -45,58 +45,63 @@ public class App {
                 String pageInfoContent = "";
                 String projectApiName, projectFrontName;
                 List<PageImport> pageInfoImports;
-                // TODO: remove those lines
-                database = databases[0];
-                language = languages[0];
+                int frontLangageNum = 0;
+
                 try (Scanner scanner = new Scanner(System.in)) {
                         // TODO: uncomment those lilnes
-                        // System.out.println("Choose a database engine:");
-                        // for (int i = 0; i < databases.length; i++) {
-                        // System.out.println((i + 1) + ") " + databases[i].getNom());
-                        // }
-                        // System.out.print("> ");
-                        // database = databases[scanner.nextInt() - 1];
-                        // System.out.println("Choose a framework:");
-                        // for (int i = 0; i < languages.length; i++) {
-                        // System.out.println((i + 1) + ") " + languages[i].getNom());
-                        // }
-                        // System.out.print("> ");
-                        // language = languages[scanner.nextInt() - 1];
-                        // System.out.println("Enter your database credentials:");
-                        // System.out.print("Database name: ");
-                        // databaseName = scanner.next();
-                        // System.out.print("Username: ");
-                        // user = scanner.next();
-                        // System.out.print("Password: ");
-                        // pwd = scanner.next();
-                        // System.out.print("Database host: ");
-                        // host = scanner.next();
-                        // System.out.print("Database port: ");
-                        // host = scanner.next();
-                        // System.out.print("Use SSL ?(Y/n): ");
-                        // useSSL = scanner.next().equalsIgnoreCase("Y");
-                        // System.out.print("Allow public key retrieval ?(Y/n): ");
-                        // allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
-                        // System.out.println();
+                        System.out.println("Choose a database engine:");
+                        for (int i = 0; i < databases.length; i++) {
+                                System.out.println((i + 1) + ") " + databases[i].getNom());
+                        }
+                        System.out.print("> ");
+                        database = databases[scanner.nextInt() - 1];
+                        System.out.println("Choose a framework:");
+                        for (int i = 0; i < languages.length; i++) {
+                                System.out.println((i + 1) + ") " + languages[i].getNom());
+                        }
+                        System.out.print("> ");
+                        language = languages[scanner.nextInt() - 1];
+                        System.out.println("Enter your database credentials:");
+                        System.out.print("Database name: ");
+                        databaseName = scanner.next();
+                        System.out.print("Username: ");
+                        user = scanner.next();
+                        System.out.print("Password: ");
+                        pwd = scanner.next();
+                        System.out.print("Database host: ");
+                        host = scanner.next();
+                        System.out.print("Database port: ");
+                        port = scanner.next();
+                        System.out.print("Use SSL ?(Y/n): ");
+                        useSSL = scanner.next().equalsIgnoreCase("Y");
+                        System.out.print("Allow public key retrieval ?(Y/n): ");
+                        allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
+                        System.out.println();
                         credentials = new Credentials(databaseName, user, pwd, host, port, useSSL,
                                         allowPublicKeyRetrieval);
                         credentials.setSgbd(database.getNom());
                         credentials.setDriver(database.getDriver());
-                        // try (Connection connect = database.getConnexion(credentials)) {
-                        // System.out.println("Test database connection");
-                        // } catch (Exception e) {
-                        // System.out.println("Cannot establish connection with the database.");
-                        // }
-                        // System.out.print("Enter your project name: ");
-                        // projectName = scanner.next();
-                        // System.out.print("Which entities to import ?(* to select all): ");
-                        // entityName = scanner.next();
+
+                        // TEST connection
+                        System.out.println("Test database connection");
+                        try (Connection connect = database.getConnexion(credentials)) {
+                                System.out.println("Connection established");
+                        } catch (Exception e) {
+                                throw new Exception("Cannot establish connection with the database.");
+                        }
+                        System.out.print("Enter your project name: ");
+                        projectName = scanner.next();
+                        System.out.print("Which entities to import ?(* to select all): ");
+                        entityName = scanner.next();
+
+                        // Front
                         System.out.println("Which langage do you want to use for your frontEnd application ?");
                         for (int i = 0; i < frontLangages.length; i++) {
                                 System.out.println(i + 1 + ") " + frontLangages[i].getName());
                         }
                         System.out.print("> ");
-                        frontLangage = frontLangages[scanner.nextInt() - 1];
+                        frontLangageNum = scanner.nextInt() - 1;
+                        frontLangage = frontLangages[frontLangageNum];
                         project = new File(projectName);
                         project.mkdir();
                         projectApiName = projectName + "-api";
@@ -297,7 +302,14 @@ public class App {
                                                 // HandyManUtils.createFile(viewFile);
                                                 HandyManUtils.overwriteFileContent(modelFile, models[i]);
                                                 HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
-                                                FrontGeneration.generateView(frontLangage, entities[i], projectName,
+                                                System.out.println("Generating entity : " +
+                                                                entities[i].getTableName());
+
+                                                FrontGeneration.generateView(HandyManUtils.fromJson(
+                                                                FrontLangage[].class,
+                                                                HandyManUtils.getFileContent(
+                                                                                Constantes.FRONT_LANGUAGE_JSON))[frontLangageNum],
+                                                                entities[i], projectName,
                                                                 projectFrontName);
                                                 // HandyManUtils.overwriteFileContent(viewFile, views[i]);
                                                 // navLink += language.getNavbarLinks().getLink();
@@ -356,6 +368,24 @@ public class App {
                                         System.out.println(pageInfo.getPath());
                                         HandyManUtils.createFile(pageInfo.getPath());
                                         HandyManUtils.overwriteFileContent(pageInfo.getPath(), pageInfoTemplate);
+
+                                        // Landing page
+
+                                        FrontPage landing = frontLangage.getPages().get("landingPage");
+                                        landing.setPath(projectName, projectFrontName, null, "tsx");
+                                        String landingPageContent = HandyManUtils.getFileContent(landing.getPath());
+                                        landingPageContent = landingPageContent.replace("[projectName]",
+                                                        HandyManUtils.majStart(projectName));
+                                        HandyManUtils.overwriteFileContent(landing.getPath(), landingPageContent);
+
+                                        // Menu
+
+                                        FrontPage menu = frontLangage.getPages().get("menu");
+                                        menu.setPath(projectName, projectFrontName, null, "tsx");
+                                        String menuContent = HandyManUtils.getFileContent(menu.getPath());
+                                        menuContent = menuContent.replace("[projectNameMaj]",
+                                                        HandyManUtils.majStart(projectName));
+                                        HandyManUtils.overwriteFileContent(menu.getPath(), menuContent);
 
                                 } catch (Exception e) {
                                         e.printStackTrace();

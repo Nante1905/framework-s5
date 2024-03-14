@@ -31,7 +31,9 @@
     "folders": {
       "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
       "form": "components/[entityMin]/[entityMin]-form.component.tsx",
-      "type": "shared/types/[entityMaj].ts"
+      "type": "shared/types/[entityMaj]",
+      "formComponentName": "[entityMaj]Form",
+      "formComponent": "[entityMin]-form.component"
     },
     "files": {
       "env": "src/shared/env/env.ts"
@@ -94,9 +96,13 @@
           }
         ]
       },
+      "landingPage": {
+        "name": "LandingPage",
+        "path": "[projectName]/[projectFrontName]/src/components/landing-page/LandingPage"
+      },
       "menu": {
         "name": "Menu",
-        "path": "[projectName]/[projectFrontName]/src/components",
+        "path": "[projectName]/[projectFrontName]/src/components/Menu",
         "imports": [
           {
             "type": "member",
@@ -128,6 +134,11 @@
           }
         ]
       },
+      "type": {
+        "name": "[entityMaj]",
+        "path": "[projectName]/[projectFrontName]/src/shared/types/[entityMaj].ts",
+        "imports": []
+      },
       "form": {
         "name": "[entity]-form.component",
         "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-form.component.tsx",
@@ -143,13 +154,8 @@
             "source": "axios"
           },
           {
-            "type": "single",
-            "elements": ["qs"],
-            "source": "qs"
-          },
-          {
             "type": "member",
-            "elements": ["FormEvent", "useEffect", "useState"],
+            "elements": ["useEffect", "useState"],
             "source": "react"
           },
           {
@@ -179,6 +185,16 @@
         "path": "[projectName]/[projectFrontName]/src/components/[entityMin]/[entityMin]-liste.component.tsx",
         "imports": [
           {
+            "type": "single",
+            "elements": ["DeleteForeverIcon"],
+            "source": "@mui/icons-material/DeleteForever"
+          },
+          {
+            "type": "single",
+            "elements": ["EditIcon"],
+            "source": "@mui/icons-material/Edit"
+          },
+          {
             "type": "member",
             "elements": [
               "Button",
@@ -203,11 +219,6 @@
             "type": "single",
             "elements": ["_"],
             "source": "lodash"
-          },
-          {
-            "type": "single",
-            "elements": ["qs"],
-            "source": "qs"
           },
           {
             "type": "member",
@@ -244,8 +255,8 @@
           },
           {
             "type": "single",
-            "elements": ["[entityMaj]Form"],
-            "source": "./[entityMin]-form.component"
+            "elements": ["CustomPagination"],
+            "source": "../../shared/components/pagination/CustomPagination"
           }
         ]
       }
