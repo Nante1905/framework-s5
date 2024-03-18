@@ -2,7 +2,10 @@ package genesis;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
@@ -23,17 +26,15 @@ public class Project {
         Database database;
         Language language;
         FrontLangage frontLangage;
-        // String databaseName = "akanjo", user = "postgres", pwd = "2003", host =
-        // "localhost", port = "5432";
-        // boolean useSSL = false, allowPublicKeyRetrieval = true;
-        String projectName = "akanjov3", entityName = "utilisateur";
-        Credentials credentials = HandyManUtils.fromJson(Credentials.class,
-                HandyManUtils.getFileContent("./database-credentials.json"));
+        String databaseName, user, pwd, host, port;
+        boolean useSSL = false, allowPublicKeyRetrieval = true;
+        String projectName = "akanjov3", entityName = "commande";
+        File credentialFile = new File(projectName + "/database-credentials.json");
+        Credentials credentials;
         String projectNameTagPath, projectNameTagContent;
-        File project, credentialFile, apiProject, frontProject;
+        File project, apiProject, frontProject;
         String customFilePath, customFileContentOuter;
-        Entity[] entities;
-        String[] models, controllers;
+        List<Entity> entities;
         String modelFile, controllerFile, customFile;
         String customFileContent;
         String foreignContext;
@@ -44,72 +45,110 @@ public class Project {
         PageImport importListe = new PageImport();
         int frontLangageNum = 0;
         Preference preference = new Preference();
-        // TODO: remove those lines
-        // database = databases[0];
-        // language = languages[0];
+        File preferenceFile = new File(projectName + "/preference.json");
+        boolean addEntity = false;
+        HashMap<String, String> pageInfoItems = new HashMap<String, String>();
         try (Scanner scanner = new Scanner(System.in)) {
-            // TODO: uncomment those lilnes
-            System.out.println("Choose a database engine:");
-            for (int i = 0; i < databases.length; i++) {
-                System.out.println((i + 1) + ") " + databases[i].getNom());
-            }
-            System.out.print("> ");
-            int databaseId = scanner.nextInt() - 1;
-            database = databases[databaseId];
-            System.out.println("Choose a framework:");
-            for (int i = 0; i < languages.length; i++) {
-                System.out.println((i + 1) + ") " + languages[i].getNom());
-            }
-            System.out.print("> ");
-            int langageId = scanner.nextInt() - 1;
-            language = languages[langageId];
-            // System.out.println("Enter your database credentials:");
-            // System.out.print("Database name: ");
-            // databaseName = scanner.next();
-            // System.out.print("Username: ");
-            // user = scanner.next();
-            // System.out.print("Password: ");
-            // pwd = scanner.next();
-            // System.out.print("Database host: ");
-            // host = scanner.next();
-            // System.out.print("Database port: ");
-            // host = scanner.next();
-            // System.out.print("Use SSL ?(Y/n): ");
-            // useSSL = scanner.next().equalsIgnoreCase("Y");
-            // System.out.print("Allow public key retrieval ?(Y/n): ");
-            // allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
-            // System.out.println();
-            // credentials = new Credentials(databaseName, user, pwd, host, port, useSSL,
-            // allowPublicKeyRetrieval);
-            credentials.setSgbd(database.getNom());
-            credentials.setDriver(database.getDriver());
-            try (Connection connect = database.getConnexion(credentials)) {
-                System.out.println("Test database connection");
-            } catch (Exception e) {
-                System.out.println("Cannot establish connection with the database.");
-            }
-            // System.out.print("Enter your project name: ");
-            // projectName = scanner.next();
-            // System.out.print("Which entities to import ?(* to select all): ");
-            // entityName = scanner.next();
-            System.out.println("Which langage do you want to use for your frontEnd application ?");
-            for (int i = 0; i < frontLangages.length; i++) {
-                System.out.println(i + 1 + ") " + frontLangages[i].getName());
-            }
-            System.out.print("> ");
-            frontLangageNum = scanner.nextInt() - 1;
-            frontLangage = frontLangages[frontLangageNum];
+            // add entity or generate new project
+            System.out.println("""
+                    How can I help you ?
+                    1) Generate new project
+                    2) Add entity to existing project
+                    > """);
+            addEntity = scanner.nextInt() == 2;
 
-            // SET PREFERENCE : TODO alaina ftsn rehefa manampy entité
-            preference.setDatabase(databaseId);
-            preference.setBackLangage(langageId);
-            preference.setFrontLangage(frontLangageNum);
-            File preferenceFile = new File("./preference.json");
-            preferenceFile.createNewFile();
-            HandyManUtils.overwriteFileContent(preferenceFile.getPath(), HandyManUtils.toJson(preference));
-
+            System.out.print("Enter your project name: ");
+            projectName = scanner.next();
             project = new File(projectName);
-            project.mkdir();
+
+            if (addEntity == true) {
+                System.out.print("Which entities to import ?(* to select all): ");
+                entityName = scanner.next();
+
+                if (preferenceFile.exists() == false) {
+                    throw new Exception("Unable to found Preference.json in the project folder");
+                }
+                preference = HandyManUtils.fromJson(Preference.class,
+                        HandyManUtils.getFileContent(preferenceFile.getPath()));
+                database = databases[preference.getDatabase()];
+                language = languages[preference.getBackLangage()];
+                frontLangageNum = preference.getFrontLangage();
+                frontLangage = frontLangages[frontLangageNum];
+
+                if (credentialFile.exists() == false) {
+                    throw new Exception(
+                            "Unable to found database-credentials.json in the project folder");
+                }
+                credentials = HandyManUtils.fromJson(Credentials.class,
+                        HandyManUtils.getFileContent(credentialFile.getPath()));
+            } else {
+                System.out.println("Choose a database engine:");
+                for (int i = 0; i < databases.length; i++) {
+                    System.out.println((i + 1) + ") " + databases[i].getNom());
+                }
+                System.out.print("> ");
+                int databaseId = scanner.nextInt() - 1;
+                database = databases[databaseId];
+                System.out.println("Choose a framework:");
+                for (int i = 0; i < languages.length; i++) {
+                    System.out.println((i + 1) + ") " + languages[i].getNom());
+                }
+                System.out.print("> ");
+                int langageId = scanner.nextInt() - 1;
+                language = languages[langageId];
+                System.out.println("Enter your database credentials:");
+                System.out.print("Database name: ");
+                databaseName = scanner.next();
+                System.out.print("Username: ");
+                user = scanner.next();
+                System.out.print("Password: ");
+                pwd = scanner.next();
+                System.out.print("Database host: ");
+                host = scanner.next();
+                System.out.print("Database port: ");
+                port = scanner.next();
+                System.out.print("Use SSL ?(Y/n): ");
+                useSSL = scanner.next().equalsIgnoreCase("Y");
+                System.out.print("Allow public key retrieval ?(Y/n): ");
+                allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
+
+                credentials = new Credentials(databaseName, user, pwd, host, port, useSSL,
+                        allowPublicKeyRetrieval);
+                credentials.setSgbd(database.getNom());
+                credentials.setDriver(database.getDriver());
+
+                System.out.println("Test database connection");
+                try (Connection connect = database.getConnexion(credentials)) {
+                    System.out.println("Connection successfully established.");
+                } catch (Exception e) {
+                    System.out.println("Cannot establish connection with the database.");
+                }
+                System.out.print("Which entities to import ?(* to select all): ");
+                entityName = scanner.next();
+                System.out.println("Which langage do you want to use for your frontEnd application ?");
+                for (int i = 0; i < frontLangages.length; i++) {
+                    System.out.println(i + 1 + ") " + frontLangages[i].getName());
+                }
+                System.out.print("> ");
+                frontLangageNum = scanner.nextInt() - 1;
+                frontLangage = frontLangages[frontLangageNum];
+
+                project = new File(projectName);
+                project.mkdir();
+                // saving credentials
+                credentialFile.createNewFile();
+                HandyManUtils.overwriteFileContent(credentialFile.getPath(),
+                        HandyManUtils.toJson(credentials));
+
+                // SET PREFERENCE : TODO alaina ftsn rehefa manampy entité
+                preference.setDatabase(databaseId);
+                preference.setBackLangage(langageId);
+                preference.setFrontLangage(frontLangageNum);
+                preferenceFile.createNewFile();
+                HandyManUtils.overwriteFileContent(preferenceFile.getPath(),
+                        HandyManUtils.toJson(preference));
+            }
+
             projectApiName = projectName + "-api";
             projectFrontName = projectName + "-front";
 
@@ -156,9 +195,6 @@ public class Project {
                         .replace("[projectNameMin]", HandyManUtils.minStart(projectName))
                         .replace("[projectApiName]", projectApiName);
 
-                if (replace.contains("xml")) {
-                    System.out.println(projectNameTagPath);
-                }
                 projectNameTagContent = HandyManUtils.getFileContent(projectNameTagPath).replace(
                         "[projectNameMaj]",
                         HandyManUtils.majStart(projectName));
@@ -176,12 +212,8 @@ public class Project {
             }
             try (Connection connect = database.getConnexion(credentials)) {
                 entities = database.getEntities(connect, credentials, entityName);
-                for (int i = 0; i < entities.length; i++) {
-                    entities[i].initialize(connect, credentials, database, language);
-                }
-                models = new String[entities.length];
-                controllers = new String[entities.length];
-                // views = new String[entities.length];
+                String modelContent = "";
+                String controllerContent = "";
                 try (Scanner sc = new Scanner(System.in)) {
                     System.out.println("How do you want to set label for the Foreign Keys ?");
                     System.out.println(
@@ -212,13 +244,17 @@ public class Project {
                     String menuItemTemplate = templateMatcher.group(1);
                     menuItemTemplate = menuItemTemplate.substring(1, menuItemTemplate.length() - 1);
                     String menuItemContent = "";
-                    for (int i = 0; i < models.length; i++) {
-                        models[i] = language.generateModel(entities[i], projectName, sc,
-                                labelChoice);
-                        controllers[i] = language.generateController(entities[i], database,
+                    for (int i = 0; i < entities.size(); i++) {
+                        System.out.println("Generating entity : " +
+                                entities.get(i).getTableName());
+                        entities.get(i).initialize(connect, credentials, database, language);
+                        modelContent = language.generateModel(entities.get(i), projectName, sc,
+                                labelChoice, entities);
+                        controllerContent = language.generateController(entities.get(i),
+                                database,
                                 credentials,
                                 projectName);
-                        // views[i] = language.generateView(entities[i], projectName);
+                        // views[i] = language.generateView(entities.get(i), projectName);
                         modelFile = language.getModel().getModelSavePath().replace(
                                 "[projectNameMaj]",
                                 HandyManUtils.majStart(projectName))
@@ -236,29 +272,29 @@ public class Project {
                         // viewFile = viewFile.replace("[projectNameMin]",
                         // HandyManUtils.minStart(projectName));
                         // viewFile = viewFile.replace("[classNameMaj]",
-                        // HandyManUtils.majStart(entities[i].getClassName()));
+                        // HandyManUtils.majStart(entities.get(i).getClassName()));
                         // viewFile = viewFile.replace("[classNameMin]",
-                        // HandyManUtils.minStart(entities[i].getClassName()));
+                        // HandyManUtils.minStart(entities.get(i).getClassName()));
                         modelFile = modelFile.replace("[projectNameMin]",
                                 HandyManUtils.minStart(projectName));
                         controllerFile = controllerFile.replace("[projectNameMin]",
                                 HandyManUtils.minStart(projectName));
-                        modelFile += "/" + HandyManUtils.majStart(entities[i].getClassName())
+                        modelFile += "/" + HandyManUtils
+                                .majStart(entities.get(i).getClassName())
                                 + "."
                                 + language.getModel().getModelExtension();
                         controllerFile += "/"
-                                + HandyManUtils.majStart(entities[i].getClassName())
+                                + HandyManUtils.majStart(entities.get(i).getClassName())
                                 + language.getController().getControllerNameSuffix()
                                 + "."
                                 + language.getController().getControllerExtension();
                         // viewFile += "/" + language.getView().getViewName() + "."
                         // + language.getView().getViewExtension();
                         // viewFile = viewFile.replace("[classNameMin]",
-                        // HandyManUtils.minStart(entities[i].getClassName()));
-                        HandyManUtils.createFile(modelFile);
+                        // HandyManUtils.minStart(entities.get(i).getClassName()));
                         for (CustomFile f : language.getModel().getModelAdditionnalFiles()) {
                             foreignContext = "";
-                            for (EntityField ef : entities[i].getFields()) {
+                            for (EntityField ef : entities.get(i).getFields()) {
                                 if (ef.isForeign()) {
                                     foreignContext += language.getModel()
                                             .getModelForeignContextAttr();
@@ -270,7 +306,7 @@ public class Project {
                             }
                             customFile = f.getName().replace("[classNameMaj]",
                                     HandyManUtils.majStart(
-                                            entities[i].getClassName()));
+                                            entities.get(i).getClassName()));
                             customFile = language.getModel().getModelSavePath().replace(
                                     "[projectNameMaj]",
                                     HandyManUtils.majStart(projectName)) + "/"
@@ -281,7 +317,7 @@ public class Project {
                                     .getFileContent(Constantes.DATA_PATH + "/"
                                             + f.getContent())
                                     .replace("[classNameMaj]", HandyManUtils
-                                            .majStart(entities[i]
+                                            .majStart(entities.get(i)
                                                     .getClassName()));
                             customFileContent = customFileContent.replace(
                                     "[projectNameMin]",
@@ -304,40 +340,66 @@ public class Project {
                             HandyManUtils.overwriteFileContent(customFile,
                                     customFileContent);
                         }
-                        HandyManUtils.createFile(controllerFile);
                         // HandyManUtils.createFile(viewFile);
-                        HandyManUtils.overwriteFileContent(modelFile, models[i]);
-                        HandyManUtils.overwriteFileContent(controllerFile, controllers[i]);
-                        System.out.println("Generating entity : " +
-                                entities[i].getTableName());
+
+                        // to avoid overwrite
+                        if (new File(modelFile).exists()) {
+                            System.out.println(modelFile
+                                    + " already exists and will not be overwritten");
+                            // if (scanner.next().trim() == "y") {
+                            // HandyManUtils.overwriteFileContent(modelFile, modelContent);
+                            // }
+                        } else {
+                            HandyManUtils.createFile(modelFile);
+                            HandyManUtils.overwriteFileContent(modelFile, modelContent);
+                        }
+
+                        if (new File(controllerFile).exists()) {
+                            System.out.println(modelFile
+                                    + " already exists and will not be overwritten ");
+                            // if (scanner.next().trim() == "y") {
+                            // HandyManUtils.overwriteFileContent(controllerFile,
+                            // controllerContent);
+                            // }
+                        } else {
+                            HandyManUtils.createFile(controllerFile);
+                            HandyManUtils.overwriteFileContent(controllerFile,
+                                    controllerContent);
+                        }
 
                         FrontGeneration.generateView(HandyManUtils.fromJson(
                                 FrontLangage[].class,
                                 HandyManUtils.getFileContent(
-                                        Constantes.FRONT_LANGUAGE_JSON))[preference.getFrontLangage()],
-                                entities[i], projectName,
-                                projectFrontName);
+                                        Constantes.FRONT_LANGUAGE_JSON))[preference
+                                                .getFrontLangage()],
+                                entities.get(i), projectName,
+                                projectFrontName, scanner);
 
                         // PageInfo Content
                         importListe = new PageImport("single",
                                 List.of(HandyManUtils
-                                        .majStart(entities[i].getClassName())
+                                        .majStart(entities.get(i)
+                                                .getClassName())
                                         + "Liste"),
                                 "../../" + frontLangage.getFolders().get("liste")
                                         .replace("[entityMin]", HandyManUtils
-                                                .minStart(entities[i]
+                                                .minStart(entities
+                                                        .get(i)
                                                         .getClassName())));
+                        System.out.println(importListe.getSource());
                         pageInfoImports.add(importListe);
                         if (i > 0) {
-                            pageInfoContent += ",\n";
+                            pageInfoContent += "\n";
                         }
                         menuItemContent = menuItemTemplate
                                 .replace("[entityMin]",
-                                        HandyManUtils.minStart(entities[i]
+                                        HandyManUtils.minStart(entities.get(i)
                                                 .getClassName()))
                                 .replace("[entityMaj]", HandyManUtils
-                                        .majStart(entities[i].getClassName()));
-                        pageInfoContent += menuItemContent;
+                                        .majStart(entities.get(i)
+                                                .getClassName()));
+                        // avoid repetition pageInfo
+                        pageInfoItems.put(entities.get(i).getClassName().toLowerCase(), menuItemContent);
                     }
 
                     // generate PageInfo.tsx
@@ -345,33 +407,59 @@ public class Project {
                             frontLangage.getExtension());
                     File pageInfoFile = new File(pageInfo.getPath());
                     System.out.println("pageinfo exist : " + pageInfoFile.exists());
+                    // System.out.println(pageInfoContent);
                     if (pageInfoFile.exists()) {
-                        String lastContent = HandyManUtils.getFileContent(pageInfoFile.getPath());
+                        pageInfoContent = "";
+                        String lastContent = HandyManUtils
+                                .getFileContent(pageInfoFile.getPath());
+
+                        // verify if pageInfo already content the Entity
+                        for (Map.Entry<String, String> item : pageInfoItems.entrySet()) {
+                            if (pageInfoContent.contains("/" + item.getKey()) == false
+                                    && lastContent.contains("/" + item.getKey()) == false) {
+                                pageInfoContent += item.getValue() + "\n";
+                            }
+                        }
                         // IMPORT
+                        List<PageImport> toImports = new ArrayList<PageImport>();
+                        for (PageImport p : pageInfoImports) {
+                            if (lastContent.contains(p.getSource()) == false) {
+                                toImports.add(p);
+                            }
+                        }
                         String importContent = FrontGeneration.generateImport(
                                 frontLangages[preference.getFrontLangage()],
-                                List.of(importListe));
+                                toImports);
+
                         lastContent = importContent + lastContent;
 
-                        lastContent = lastContent.replace("];", menuItemContent + "\n];");
+                        lastContent = lastContent.replace("];", pageInfoContent + "\n];");
                         HandyManUtils.overwriteFileContent(pageInfo.getPath(), lastContent);
+
                     } else if (pageInfoFile.exists() == false) {
+
+                        for (Map.Entry<String, String> item : pageInfoItems.entrySet()) {
+                            pageInfoContent += item.getValue() + "\n";
+                        }
                         pageInfoTemplate = pageInfoTemplate.replace(templateMatcher.group(),
                                 pageInfoContent);
                         pageInfoTemplate = pageInfoTemplate
                                 .replace("[exportKey]",
-                                        frontLangage.getVariables().getExportKey())
-                                .replace("[endLine]", frontLangage.getVariables().getEndLine());
+                                        frontLangage.getVariables()
+                                                .getExportKey())
+                                .replace("[endLine]", frontLangage.getVariables()
+                                        .getEndLine());
                         pageInfo.setImports(pageInfoImports);
 
                         // IMPORT
                         String pageInfoImportContent = FrontGeneration.generateImport(
                                 frontLangages[preference.getFrontLangage()],
                                 pageInfo.getImports());
-                        pageInfoTemplate = pageInfoTemplate.replace("<import>", pageInfoImportContent);
-                        System.out.println(pageInfo.getPath());
+                        pageInfoTemplate = pageInfoTemplate.replace("<import>",
+                                pageInfoImportContent);
                         HandyManUtils.createFile(pageInfo.getPath());
-                        HandyManUtils.overwriteFileContent(pageInfo.getPath(), pageInfoTemplate);
+                        HandyManUtils.overwriteFileContent(pageInfo.getPath(),
+                                pageInfoTemplate);
                     }
 
                     // Landing page

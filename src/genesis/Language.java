@@ -2,8 +2,10 @@ package genesis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import handyman.HandyManUtils;
 
@@ -126,7 +128,8 @@ public class Language {
         this.view = view;
     }
 
-    public String generateModel(Entity entity, String projectName, Scanner sc, int labelChoice) throws Throwable {
+    public String generateModel(Entity entity, String projectName, Scanner sc, int labelChoice,
+            List<Entity> entityToGenerate) throws Throwable {
         System.out.println("Generating model for " + entity.getTableName());
         String content = HandyManUtils.getFileContent(
                 Constantes.DATA_PATH + "/" + getModel().getModelTemplate() + "." + Constantes.MODEL_TEMPLATE_EXT);
@@ -153,6 +156,11 @@ public class Language {
         String fields = "", fieldAnnotes, fieldAccessors = "";
         List<EntityField> nonFkFields = new ArrayList<EntityField>();
         EntityField firstStringField = null;
+        Set<Entity> setEntities = new HashSet<>(entityToGenerate);
+        for (Entity e : setEntities) {
+            System.out.println(e.getTableName());
+        }
+
         for (int i = 0; i < entity.getFields().length; i++) {
             fieldAnnotes = "";
             if (entity.getFields()[i].isPrimary()) {
@@ -166,6 +174,11 @@ public class Language {
                             HandyManUtils.minStart(entity.getFields()[i].getReferencedField()));
                     fieldAnnotes = fieldAnnotes.replace("[referencedFieldNameMaj]",
                             HandyManUtils.majStart(entity.getFields()[i].getReferencedField()));
+                }
+                Entity fkEntity = new Entity(entity.getFields()[i].getName());
+                if (!setEntities.contains(fkEntity)) {
+                    entityToGenerate.add(fkEntity);
+                    setEntities.add(fkEntity);
                 }
             }
             for (String fa : getModel().getModelFieldAnnotations()) {

@@ -3,6 +3,7 @@ package genesis.frontend;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +25,8 @@ import handyman.HandyManUtils;
 public class FrontGeneration {
     public static int SUBSTACT_SPACE = 5;
 
-    public static void generateView(FrontLangage langage, Entity e, String projectName, String projectFrontName)
+    public static void generateView(FrontLangage langage, Entity e, String projectName, String projectFrontName,
+            Scanner scanner)
             throws Throwable {
 
         ViewComponent view = new ViewComponent();
@@ -43,7 +45,7 @@ public class FrontGeneration {
                 .replace("[projectFrontName]", projectFrontName));
         view.addComponents(type);
 
-        view.generateFile();
+        view.generateFile(scanner);
     }
 
     public static EntityComponent generateType(FrontLangage langage, Entity e) throws Throwable {
