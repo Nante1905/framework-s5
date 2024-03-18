@@ -28,8 +28,8 @@ public class Project {
         FrontLangage frontLangage;
         String databaseName, user, pwd, host, port;
         boolean useSSL = false, allowPublicKeyRetrieval = true;
-        String projectName = "akanjov3", entityName = "commande";
-        File credentialFile = new File(projectName + "/database-credentials.json");
+        String projectName, entityName;
+        File credentialFile;
         Credentials credentials;
         String projectNameTagPath, projectNameTagContent;
         File project, apiProject, frontProject;
@@ -45,7 +45,7 @@ public class Project {
         PageImport importListe = new PageImport();
         int frontLangageNum = 0;
         Preference preference = new Preference();
-        File preferenceFile = new File(projectName + "/preference.json");
+        File preferenceFile;
         boolean addEntity = false;
         HashMap<String, String> pageInfoItems = new HashMap<String, String>();
         try (Scanner scanner = new Scanner(System.in)) {
@@ -60,6 +60,8 @@ public class Project {
             System.out.print("Enter your project name: ");
             projectName = scanner.next();
             project = new File(projectName);
+            credentialFile = new File(projectName + "/database-credentials.json");
+            preferenceFile = new File(projectName + "/preference.json");
 
             if (addEntity == true) {
                 System.out.print("Which entities to import ?(* to select all): ");
