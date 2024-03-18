@@ -16,7 +16,7 @@ import genesis.frontend.variables.PageImport;
 import handyman.HandyManUtils;
 
 public class Project {
-    public static void generate() throws Throwable {
+    public static void generate(String projectName, String entityAdd) throws Throwable {
         Database[] databases = HandyManUtils.fromJson(Database[].class,
                 HandyManUtils.getFileContent(Constantes.DATABASE_JSON));
         Language[] languages = HandyManUtils.fromJson(Language[].class,
@@ -28,7 +28,7 @@ public class Project {
         FrontLangage frontLangage;
         String databaseName, user, pwd, host, port;
         boolean useSSL = false, allowPublicKeyRetrieval = true;
-        String projectName, entityName;
+        String entityName = "";
         File credentialFile;
         Credentials credentials;
         String projectNameTagPath, projectNameTagContent;
@@ -46,26 +46,28 @@ public class Project {
         int frontLangageNum = 0;
         Preference preference = new Preference();
         File preferenceFile;
-        boolean addEntity = false;
+        // boolean addEntity = false;
         HashMap<String, String> pageInfoItems = new HashMap<String, String>();
         try (Scanner scanner = new Scanner(System.in)) {
             // add entity or generate new project
-            System.out.println("""
-                    How can I help you ?
-                    1) Generate new project
-                    2) Add entity to existing project
-                    > """);
-            addEntity = scanner.nextInt() == 2;
+            // System.out.println("""
+            // How can I help you ?
+            // 1) Generate new project
+            // 2) Add entity to existing project
+            // > """);
+            // addEntity = scanner.nextInt() == 2;
 
-            System.out.print("Enter your project name: ");
-            projectName = scanner.next();
-            project = new File(projectName);
-            credentialFile = new File(projectName + "/database-credentials.json");
-            preferenceFile = new File(projectName + "/preference.json");
+            // System.out.print("Enter your project name: ");
+            // projectName = scanner.next();
+            project = new File(Constantes.CURRENT_DIR + projectName);
+            credentialFile = new File(Constantes.CURRENT_DIR + projectName + "/database-credentials.json");
+            preferenceFile = new File(Constantes.CURRENT_DIR + projectName + "/preference.json");
 
-            if (addEntity == true) {
-                System.out.print("Which entities to import ?(* to select all): ");
-                entityName = scanner.next();
+            // Ajout entite fotsiny
+            if (entityAdd != null && entityAdd.length() > 0) {
+                System.out.println("new entity : " + entityAdd);
+
+                entityName = entityAdd;
 
                 if (preferenceFile.exists() == false) {
                     throw new Exception("Unable to found Preference.json in the project folder");
@@ -135,7 +137,7 @@ public class Project {
                 frontLangageNum = scanner.nextInt() - 1;
                 frontLangage = frontLangages[frontLangageNum];
 
-                project = new File(projectName);
+                project = new File(Constantes.CURRENT_DIR + projectName);
                 project.mkdir();
                 // saving credentials
                 credentialFile.createNewFile();
@@ -151,6 +153,7 @@ public class Project {
                         HandyManUtils.toJson(preference));
             }
 
+            entityName = entityName.toLowerCase();
             projectApiName = projectName + "-api";
             projectFrontName = projectName + "-front";
 
@@ -173,6 +176,7 @@ public class Project {
                 HandyManUtils.overwriteFileContent(customFilePath, customFileContentOuter);
             }
 
+            System.out.println(project.getPath() + "=========================================");
             System.out.println(Constantes.DATA_PATH + "/" + language.getSkeleton() + "."
                     + Constantes.SKELETON_EXTENSION + "app path " +
                     apiProject.getPath());
@@ -401,7 +405,8 @@ public class Project {
                                         .majStart(entities.get(i)
                                                 .getClassName()));
                         // avoid repetition pageInfo
-                        pageInfoItems.put(entities.get(i).getClassName().toLowerCase(), menuItemContent);
+                        pageInfoItems.put(entities.get(i).getClassName().toLowerCase(),
+                                menuItemContent);
                     }
 
                     // generate PageInfo.tsx
@@ -418,7 +423,8 @@ public class Project {
                         // verify if pageInfo already content the Entity
                         for (Map.Entry<String, String> item : pageInfoItems.entrySet()) {
                             if (pageInfoContent.contains("/" + item.getKey()) == false
-                                    && lastContent.contains("/" + item.getKey()) == false) {
+                                    && lastContent.contains(
+                                            "/" + item.getKey()) == false) {
                                 pageInfoContent += item.getValue() + "\n";
                             }
                         }

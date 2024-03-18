@@ -31,17 +31,17 @@ public class FrontGeneration {
 
         ViewComponent view = new ViewComponent();
         EntityComponent form = generateForm(langage, e);
-        form.setPath(form.getPath().replace("[projectName]", projectName)
+        form.setPath(Constantes.CURRENT_DIR + form.getPath().replace("[projectName]", projectName)
                 .replace("[projectFrontName]", projectFrontName));
         view.addComponents(form);
 
         EntityComponent liste = generateList(langage, e);
-        liste.setPath(liste.getPath().replace("[projectName]", projectName)
+        liste.setPath(Constantes.CURRENT_DIR + liste.getPath().replace("[projectName]", projectName)
                 .replace("[projectFrontName]", projectFrontName));
         view.addComponents(liste);
 
         EntityComponent type = generateType(langage, e);
-        type.setPath(type.getPath().replace("[projectName]", projectName)
+        type.setPath(Constantes.CURRENT_DIR + type.getPath().replace("[projectName]", projectName)
                 .replace("[projectFrontName]", projectFrontName));
         view.addComponents(type);
 
