@@ -176,10 +176,6 @@ public class Project {
                 HandyManUtils.overwriteFileContent(customFilePath, customFileContentOuter);
             }
 
-            System.out.println(project.getPath() + "=========================================");
-            System.out.println(Constantes.DATA_PATH + "/" + language.getSkeleton() + "."
-                    + Constantes.SKELETON_EXTENSION + "app path " +
-                    apiProject.getPath());
             // Extract API skeleton
             HandyManUtils.extractDir(
                     Constantes.DATA_PATH + "/" + language.getSkeleton() + "."
@@ -350,23 +346,21 @@ public class Project {
 
                         // to avoid overwrite
                         if (new File(modelFile).exists()) {
-                            System.out.println(modelFile
-                                    + " already exists and will not be overwritten");
-                            // if (scanner.next().trim() == "y") {
-                            // HandyManUtils.overwriteFileContent(modelFile, modelContent);
-                            // }
+                            if (entityAdd != null) {
+                                System.out.println(modelFile
+                                        + " already exists and will not be overwritten");
+                            }
                         } else {
                             HandyManUtils.createFile(modelFile);
                             HandyManUtils.overwriteFileContent(modelFile, modelContent);
                         }
 
                         if (new File(controllerFile).exists()) {
-                            System.out.println(modelFile
-                                    + " already exists and will not be overwritten ");
-                            // if (scanner.next().trim() == "y") {
-                            // HandyManUtils.overwriteFileContent(controllerFile,
-                            // controllerContent);
-                            // }
+                            if (entityAdd != null) {
+                                System.out.println(controllerFile
+                                        + " already exists and will not be overwritten ");
+
+                            }
                         } else {
                             HandyManUtils.createFile(controllerFile);
                             HandyManUtils.overwriteFileContent(controllerFile,
@@ -392,7 +386,6 @@ public class Project {
                                                 .minStart(entities
                                                         .get(i)
                                                         .getClassName())));
-                        System.out.println(importListe.getSource());
                         pageInfoImports.add(importListe);
                         if (i > 0) {
                             pageInfoContent += "\n";
@@ -413,7 +406,6 @@ public class Project {
                     pageInfo.setPath(projectName, projectFrontName, null,
                             frontLangage.getExtension());
                     File pageInfoFile = new File(pageInfo.getPath());
-                    System.out.println("pageinfo exist : " + pageInfoFile.exists());
                     // System.out.println(pageInfoContent);
                     if (pageInfoFile.exists()) {
                         pageInfoContent = "";

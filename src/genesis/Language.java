@@ -2,10 +2,8 @@ package genesis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 import handyman.HandyManUtils;
 
@@ -156,11 +154,10 @@ public class Language {
         String fields = "", fieldAnnotes, fieldAccessors = "";
         List<EntityField> nonFkFields = new ArrayList<EntityField>();
         EntityField firstStringField = null;
-        Set<Entity> setEntities = new HashSet<>(entityToGenerate);
-        for (Entity e : setEntities) {
-            System.out.println(e.getTableName());
+        List<String> setEntities = new ArrayList<String>();
+        for (Entity e : entityToGenerate) {
+            setEntities.add(e.getTableName());
         }
-
         for (int i = 0; i < entity.getFields().length; i++) {
             fieldAnnotes = "";
             if (entity.getFields()[i].isPrimary()) {
@@ -176,9 +173,13 @@ public class Language {
                             HandyManUtils.majStart(entity.getFields()[i].getReferencedField()));
                 }
                 Entity fkEntity = new Entity(entity.getFields()[i].getName());
-                if (!setEntities.contains(fkEntity)) {
+                if (!setEntities.contains(fkEntity.getTableName())) {
+                    System.out.println("efa mi existe d tsy ataoko tsony");
                     entityToGenerate.add(fkEntity);
-                    setEntities.add(fkEntity);
+                    setEntities.add(fkEntity.getTableName());
+                } else {
+                    System.out.println("mbola tsy misy " + fkEntity.getTableName());
+
                 }
             }
             for (String fa : getModel().getModelFieldAnnotations()) {

@@ -44,7 +44,3 @@ front: json tsotra no alefa amlay post sy put
 - lay landing page sy fanovana mbola tsy tafiditra
 
 RESTE A FAIRE
-
-- PB FK: ilay PageInfo
-- pico cli
-- test general
