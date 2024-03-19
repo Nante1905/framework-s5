@@ -1,10 +1,11 @@
 package genesis;
 
 public class Constantes {
-    public static final String DATABASE_JSON = "data_genesis/databases.json";
-    public static final String LANGUAGE_JSON = "data_genesis/languages.json";
-    public static final String FRONT_LANGUAGE_JSON = "data_genesis/front-languages.json";
-    public static final String DATA_PATH = "data_genesis";
+    public static final String CONFIG_DIR = System.getenv("ProgramFiles") + "/genesis/config/";
+    public static final String DATABASE_JSON = CONFIG_DIR + "data_genesis/databases.json";
+    public static final String LANGUAGE_JSON = CONFIG_DIR + "data_genesis/languages.json";
+    public static final String FRONT_LANGUAGE_JSON = CONFIG_DIR + "data_genesis/front-languages.json";
+    public static final String DATA_PATH = CONFIG_DIR + "data_genesis";
     public static final String SKELETON_EXTENSION = "zip";
     public static final String CREDENTIAL_FILE = "credentials.json";
     public static final String MODEL_TEMPLATE_EXT = "templ";
@@ -13,7 +14,7 @@ public class Constantes {
     public static final int LABEL_PER_ENTITY = 1;
     public static final int LABEL_FIRST_STRING = 2;
     public static final int SET_LABEL_LATER = 3;
-    public static final String FRONT_TEMPLATE_DIR = "react-template";
+    public static final String FRONT_TEMPLATE_DIR = CONFIG_DIR + "react-template";
     public static final String LIST_TEMPLATE = FRONT_TEMPLATE_DIR + "/liste/liste-template.templ";
     public static final String TABLEHEAD_TEMPLATE = FRONT_TEMPLATE_DIR + "/liste/tablehead-template.templ";
     public static final String TABLEBODY_TEMPLATE = FRONT_TEMPLATE_DIR + "/liste/tablebody-template.templ";
@@ -24,6 +25,7 @@ public class Constantes {
     public static final String INPUT_TYPES = FRONT_TEMPLATE_DIR + "/input-types.json";
     public static final String FIELD_TYPES = FRONT_TEMPLATE_DIR + "/field-types.json";
     public static final String FRONT_TEMPLATE_TYPE = FRONT_TEMPLATE_DIR + "/types-template.templ";
+    public static final String CURRENT_DIR = System.getProperty("user.dir") + "/";
 
     public static final int TAILLE_PAGE = 5;
 }
