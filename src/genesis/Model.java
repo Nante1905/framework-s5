@@ -125,7 +125,7 @@ public class Model {
     }
 
     public String getModelSavePath() {
-        return modelSavePath;
+        return Constantes.CURRENT_DIR + modelSavePath;
     }
 
     public void setModelSavePath(String modelSavePath) {

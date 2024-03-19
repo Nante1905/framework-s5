@@ -5,8 +5,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
 
 public class Database {
     private int id;
@@ -85,7 +86,7 @@ public class Database {
         return connex;
     }
 
-    public Entity[] getEntities(Connection connex, Credentials credentials, String entityName)
+    public List<Entity> getEntities(Connection connex, Credentials credentials, String entityName)
             throws ClassNotFoundException, SQLException {
         boolean opened = false;
         Connection connect = connex;
@@ -101,7 +102,7 @@ public class Database {
         }
         PreparedStatement statement = connect.prepareStatement(query);
         try {
-            Vector<Entity> liste = new Vector<>();
+            List<Entity> liste = new ArrayList<Entity>();
             Entity entity;
             try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {
@@ -110,11 +111,7 @@ public class Database {
                     liste.add(entity);
                 }
             }
-            Entity[] entities = new Entity[liste.size()];
-            for (int i = 0; i < entities.length; i++) {
-                entities[i] = liste.get(i);
-            }
-            return entities;
+            return liste;
         } finally {
             statement.close();
             if (opened) {

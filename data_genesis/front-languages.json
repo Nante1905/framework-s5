@@ -29,7 +29,7 @@
       }
     },
     "folders": {
-      "liste": "components/[entityMin]/[entityMin]-liste.component.tsx",
+      "liste": "components/[entityMin]/[entityMin]-liste.component",
       "form": "components/[entityMin]/[entityMin]-form.component.tsx",
       "type": "shared/types/[entityMaj]",
       "formComponentName": "[entityMaj]Form",

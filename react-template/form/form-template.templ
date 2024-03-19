@@ -11,12 +11,15 @@ const [entityMaj]Form = (props: [entityMaj]Props) => {
       ...state,
       sendLoading: true,
     }));
+
+    let method = "POST";
     let url = `${URL_API}/insert[entityMin].do`;
     if (props.id) {
       url = `${URL_API}/update[entityMin].do?[entityPkField]=${props.id}`;
+      method = "PUT";
     }
     const options = {
-      method: "POST",
+      method: method,
       headers: { "Content-type": "application/json" },
       data: data,
       url,
@@ -56,7 +59,6 @@ const [entityMaj]Form = (props: [entityMaj]Props) => {
             .data?.[0]
       : undefined,
   });
-  const sleep = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
 
   return (
     <>

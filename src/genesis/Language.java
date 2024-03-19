@@ -126,7 +126,8 @@ public class Language {
         this.view = view;
     }
 
-    public String generateModel(Entity entity, String projectName, Scanner sc, int labelChoice) throws Throwable {
+    public String generateModel(Entity entity, String projectName, Scanner sc, int labelChoice,
+            List<Entity> entityToGenerate) throws Throwable {
         System.out.println("Generating model for " + entity.getTableName());
         String content = HandyManUtils.getFileContent(
                 Constantes.DATA_PATH + "/" + getModel().getModelTemplate() + "." + Constantes.MODEL_TEMPLATE_EXT);
@@ -153,6 +154,10 @@ public class Language {
         String fields = "", fieldAnnotes, fieldAccessors = "";
         List<EntityField> nonFkFields = new ArrayList<EntityField>();
         EntityField firstStringField = null;
+        List<String> setEntities = new ArrayList<String>();
+        for (Entity e : entityToGenerate) {
+            setEntities.add(e.getTableName());
+        }
         for (int i = 0; i < entity.getFields().length; i++) {
             fieldAnnotes = "";
             if (entity.getFields()[i].isPrimary()) {
@@ -166,6 +171,15 @@ public class Language {
                             HandyManUtils.minStart(entity.getFields()[i].getReferencedField()));
                     fieldAnnotes = fieldAnnotes.replace("[referencedFieldNameMaj]",
                             HandyManUtils.majStart(entity.getFields()[i].getReferencedField()));
+                }
+                Entity fkEntity = new Entity(entity.getFields()[i].getName());
+                if (!setEntities.contains(fkEntity.getTableName())) {
+                    System.out.println("efa mi existe d tsy ataoko tsony");
+                    entityToGenerate.add(fkEntity);
+                    setEntities.add(fkEntity.getTableName());
+                } else {
+                    System.out.println("mbola tsy misy " + fkEntity.getTableName());
+
                 }
             }
             for (String fa : getModel().getModelFieldAnnotations()) {
