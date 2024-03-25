@@ -1,0 +1,55 @@
+[namespace] [package];
+
+[imports]
+
+public class AuthFilter implements Filter {
+    List<String> excludedUrls;
+
+    @Override
+    public void init(FilterConfig filterConfig) {
+        excludedUrls = new ArrayList<String>();
+        String urls = filterConfig.getInitParameter("authExclude");
+        for (String url : urls.split(",")) {
+            System.out.println(url);
+            excludedUrls.add(url);
+        }
+    }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest servletReq = (HttpServletRequest) req;
+        HttpServletResponse servletRes = (HttpServletResponse) res;
+
+        String requestedUrl = servletReq.getRequestURI().substring(1);
+        String[] splittedUrl = requestedUrl.split("/");
+
+        String url = splittedUrl[splittedUrl.length - 1];
+        if (excludedUrls.contains(url) == false) {
+            JWTService jwtService = new JWTService();
+            String token = jwtService.getJWTFromRequest(servletReq);
+            if (token == null || token.isBlank()) {
+                servletRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                servletRes.getWriter().write("You must provide Bearer authentification token");
+                throw new MalformedJwtException("");
+            }
+            try {
+                jwtService.validateToken(token);
+                Claims claims = jwtService.parseToken(token);
+                System.out.println(claims.get("email"));
+                servletReq.setAttribute("auth", claims);
+            } catch (ExpiredJwtException e) {
+                servletRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                servletRes.getWriter().write("Your token is expired");
+                throw e;
+            } catch (MalformedJwtException | UnsupportedJwtException e) {
+                servletRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                servletRes.getWriter().write("Invalid token");
+                throw e;
+            }
+        }
+        chain.doFilter(servletReq, res);
+
+    }
+
+}

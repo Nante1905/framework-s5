@@ -1,0 +1,40 @@
+[namespace] [package];
+
+[imports]
+
+[annotations]
+public class AuthController {
+    private DAO dao = new DAO();
+
+    @URLMapping(value = "login.do", method = "POST")
+    public ModelRest login(ServletEntity entity) {
+        DatabaseInfo d = DatabaseInfo.getInstance(null);
+        ModelRest model = new ModelRest();
+
+        [authClassMaj] auth = Utils.fromJson([authClassMaj].class, entity.getBody());
+        AuthService authService = new AuthService();
+        try (Connection connex = DAOConnexion.getConnexion(d.getDriver(), d.getSgbd(), d.getHost(), d.getPort(),
+                d.getDatabaseName(), d.getUser(), d.getPwd(), d.isUseSSL(), d.isAllowPublicKeyRetrieval())) {
+            [authClassMaj] a = authService.authenticate(auth, connex);
+            String token = new JWTService().generateToken(a);
+            model.addItem("token", token);
+            return model;
+        } catch (AuthException e) {
+            model.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            model.addItem("err", e.getMessage());
+            return model;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof PSQLException) {
+                System.out.println("ERREUR SQL ========");
+                model.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                model.addItem("err", "Erreur du serveur : probleme de contrainte de donnee");
+            } else {
+                model.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                model.addItem("err", "Erreur interne du serveur");
+            }
+            return model;
+        }
+    }
+
+}

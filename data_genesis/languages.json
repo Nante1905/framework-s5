@@ -165,6 +165,75 @@
       "viewSavePath": "[projectNameMaj]/[projectApiName]/web/pages",
       "viewExtension": "jsp"
     },
+    "authController": {
+      "name": "AuthController.java",
+      "imports": [
+        "import java.sql.Connection;",
+        "import org.postgresql.util.PSQLException;",
+        "import [projectNameMin].entities.[authClassMaj];",
+        "import [Min].exception.AuthException;",
+        "import [Min].service.AuthService;",
+        "import [Min].service.JWTService;",
+        "import eriq.flamework.annotations.Controller;",
+        "import eriq.flamework.annotations.URLMapping;",
+        "import eriq.flamework.dao.DatabaseInfo;",
+        "import eriq.flamework.model.ModelRest;",
+        "import eriq.flamework.servlet.ServletEntity;",
+        "import handyman.Utils;",
+        "import jakarta.servlet.http.HttpServletResponse;",
+        "import veda.godao.DAO;",
+        "import veda.godao.utils.DAOConnexion;"
+      ],
+      "package": "[Min].controllers",
+      "annotations": ["@Controller", "@Singleton"],
+      "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/controllers"
+    },
+    "authFilter": {
+      "name": "AuthFilter.java",
+      "imports": [
+        "import java.sql.Connection;",
+        "import org.postgresql.util.PSQLException;",
+        "import [projectNameMin].entities.[authClassMaj];",
+        "import [projectNameMin].exception.AuthException;",
+        "import [projectNameMin].service.AuthService;",
+        "import [projectNameMin].service.JWTService;",
+        "import eriq.flamework.annotations.Controller;",
+        "import eriq.flamework.annotations.URLMapping;",
+        "import eriq.flamework.dao.DatabaseInfo;",
+        "import eriq.flamework.model.ModelRest;",
+        "import eriq.flamework.servlet.ServletEntity;",
+        "import handyman.Utils;",
+        "import jakarta.servlet.http.HttpServletResponse;",
+        "import veda.godao.DAO;",
+        "import veda.godao.utils.DAOConnexion;"
+      ],
+      "package": "[projectNameMin].filters",
+      "annotations": [],
+      "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/controllers"
+    },
+    "jwtService": {
+      "name": "JWTService.java",
+      "imports": [
+        "import java.security.Key;",
+        "import java.util.Base64;",
+        "import java.util.Date;",
+        "import javax.crypto.spec.SecretKeySpec;",
+        "import [projectNameMin].entities.[authClassMaj];",
+        "import io.jsonwebtoken.Claims;",
+        "import io.jsonwebtoken.ExpiredJwtException;",
+        "import io.jsonwebtoken.Jwts;",
+        "import io.jsonwebtoken.MalformedJwtException;",
+        "import io.jsonwebtoken.SignatureAlgorithm;",
+        "import io.jsonwebtoken.UnsupportedJwtException;",
+        "import jakarta.servlet.http.HttpServletRequest;"
+      ],
+      "package": "[projectNameMin].services",
+      "annotations": [],
+      "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/services"
+    },
+    "authService": {
+      "name": "AuthService"
+    },
     "customChanges": [],
     "navbarLinks": {
       "path": "[projectNameMaj]/[projectApiName]/web/pages/layout/layout.jsp",
