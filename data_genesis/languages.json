@@ -232,7 +232,18 @@
       "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/services"
     },
     "authService": {
-      "name": "AuthService"
+      "name": "AuthService.java",
+      "imports": [
+        "import java.sql.Connection;",
+        "import java.sql.PreparedStatement;",
+        "import java.sql.ResultSet;",
+        "import java.sql.SQLException;",
+        "import [projectNameMin].entities.[authClassNameMaj];",
+        "import [projectNameMin].exception.AuthException;",
+        "import veda.godao.annotations.Table;"
+      ],
+      "package": "[projectNameMin].services",
+      "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/services"
     },
     "customChanges": [],
     "navbarLinks": {
