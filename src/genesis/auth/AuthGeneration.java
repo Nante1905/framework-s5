@@ -1,4 +1,4 @@
-package genesis.frontend;
+package genesis.auth;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import genesis.Constantes;
 import genesis.Entity;
 import genesis.Language;
-import genesis.frontend.components.AuthComponent;
+import genesis.auth.components.AuthComponent;
 import handyman.HandyManUtils;
 
 // TODO : Replace auth class maj
@@ -36,12 +36,15 @@ public class AuthGeneration {
 
         // replace package name
         controller.setPackageName(
-                controller.getPackageName().replace("[projectNameMin]", this.projectName.toLowerCase()));
+                controller.getPackageName().replace("[projectNameMin]",
+                        this.projectName.toLowerCase()));
 
         // replace save path
-        controller.setSavePath(controller.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
         controller.setSavePath(
-                controller.getSavePath().replace("[projectNameMaj]", HandyManUtils.majStart(this.getProjectName())));
+                controller.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
+        controller.setSavePath(
+                controller.getSavePath().replace("[projectNameMaj]",
+                        HandyManUtils.majStart(this.getProjectName())));
 
         // init template
         authControllerTemplate = authControllerTemplate.replace("[namespace]",
@@ -72,11 +75,13 @@ public class AuthGeneration {
         }).collect(Collectors.toList()).toArray(filter.getImports());
 
         // replace package name
-        filter.setPackageName(filter.getPackageName().replace("[projectNameMin]", this.projectName.toLowerCase()));
+        filter.setPackageName(
+                filter.getPackageName().replace("[projectNameMin]", this.projectName.toLowerCase()));
         // replace save path
         filter.setSavePath(filter.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
         filter.setSavePath(
-                filter.getSavePath().replace("[projectNameMaj]", HandyManUtils.majStart(this.getProjectName())));
+                filter.getSavePath().replace("[projectNameMaj]",
+                        HandyManUtils.majStart(this.getProjectName())));
 
         // init template
         authFilterTemplate = authFilterTemplate.replace("[namespace]",
@@ -107,11 +112,14 @@ public class AuthGeneration {
 
         // replace package name
         jwtService.setPackageName(
-                jwtService.getPackageName().replace("[projectNameMin]", this.projectName.toLowerCase()));
+                jwtService.getPackageName().replace("[projectNameMin]",
+                        this.projectName.toLowerCase()));
         // replace save path
-        jwtService.setSavePath(jwtService.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
         jwtService.setSavePath(
-                jwtService.getSavePath().replace("[projectNameMaj]", HandyManUtils.majStart(this.getProjectName())));
+                jwtService.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
+        jwtService.setSavePath(
+                jwtService.getSavePath().replace("[projectNameMaj]",
+                        HandyManUtils.majStart(this.getProjectName())));
 
         // init template
         jwtServiceTemplate = jwtServiceTemplate.replace("[namespace]",
@@ -141,12 +149,15 @@ public class AuthGeneration {
 
         // replace package name
         authService.setPackageName(
-                authService.getPackageName().replace("[projectNameMin]", this.projectName.toLowerCase()));
+                authService.getPackageName().replace("[projectNameMin]",
+                        this.projectName.toLowerCase()));
 
         // replace save path
-        authService.setSavePath(authService.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
         authService.setSavePath(
-                authService.getSavePath().replace("[projectNameMaj]", HandyManUtils.majStart(this.getProjectName())));
+                authService.getSavePath().replace("[projectNameMin]", this.projectName.toLowerCase()));
+        authService.setSavePath(
+                authService.getSavePath().replace("[projectNameMaj]",
+                        HandyManUtils.majStart(this.getProjectName())));
 
         // init template
         authServiceTemplate = authServiceTemplate.replace("[namespace]",

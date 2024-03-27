@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
-import genesis.frontend.components.AuthComponent;
+import genesis.auth.components.AuthComponent;
 import handyman.HandyManUtils;
 
 public class Language {

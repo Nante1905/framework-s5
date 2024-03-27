@@ -1,4 +1,4 @@
-package genesis.frontend.components;
+package genesis.auth.components;
 
 public class AuthComponent {
     String name;
