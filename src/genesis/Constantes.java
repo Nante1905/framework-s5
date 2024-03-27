@@ -1,10 +1,13 @@
 package genesis;
 
 public class Constantes {
-    public static final String CONFIG_DIR = System.getenv("ProgramFiles") + "/genesis/config/";
+    // public static final String CONFIG_DIR = System.getenv("ProgramFiles") +
+    // "/genesis/config/";
+    public static final String CONFIG_DIR = "";
     public static final String DATABASE_JSON = CONFIG_DIR + "data_genesis/databases.json";
     public static final String LANGUAGE_JSON = CONFIG_DIR + "data_genesis/languages.json";
     public static final String FRONT_LANGUAGE_JSON = CONFIG_DIR + "data_genesis/front-languages.json";
+    public static final String AUTH_TEMPLATE_DIR = CONFIG_DIR + "data_genesis/auth-template";
     public static final String DATA_PATH = CONFIG_DIR + "data_genesis";
     public static final String SKELETON_EXTENSION = "zip";
     public static final String CREDENTIAL_FILE = "credentials.json";

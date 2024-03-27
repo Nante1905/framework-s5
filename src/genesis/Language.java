@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import genesis.frontend.components.AuthComponent;
 import handyman.HandyManUtils;
 
 public class Language {
@@ -21,6 +22,42 @@ public class Language {
     private CustomChanges[] customChanges;
     private NavbarLink navbarLinks;
     private String exception;
+    AuthComponent authController;
+    AuthComponent authFilter;
+    AuthComponent jwtService;
+    AuthComponent authService;
+
+    public AuthComponent getAuthService() {
+        return authService;
+    }
+
+    public void setAuthService(AuthComponent authService) {
+        this.authService = authService;
+    }
+
+    public AuthComponent getJwtService() {
+        return jwtService;
+    }
+
+    public void setJwtService(AuthComponent jwtService) {
+        this.jwtService = jwtService;
+    }
+
+    public AuthComponent getAuthFilter() {
+        return authFilter;
+    }
+
+    public void setAuthFilter(AuthComponent authFilter) {
+        this.authFilter = authFilter;
+    }
+
+    public AuthComponent getAuthController() {
+        return authController;
+    }
+
+    public void setAuthController(AuthComponent authController) {
+        this.authController = authController;
+    }
 
     public NavbarLink getNavbarLinks() {
         return navbarLinks;

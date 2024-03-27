@@ -171,9 +171,9 @@
         "import java.sql.Connection;",
         "import org.postgresql.util.PSQLException;",
         "import [projectNameMin].entities.[authClassMaj];",
-        "import [Min].exception.AuthException;",
-        "import [Min].service.AuthService;",
-        "import [Min].service.JWTService;",
+        "import [projectNameMin].exception.AuthException;",
+        "import [projectNameMin].service.AuthService;",
+        "import [projectNameMin].service.JWTService;",
         "import eriq.flamework.annotations.Controller;",
         "import eriq.flamework.annotations.URLMapping;",
         "import eriq.flamework.dao.DatabaseInfo;",
@@ -184,7 +184,7 @@
         "import veda.godao.DAO;",
         "import veda.godao.utils.DAOConnexion;"
       ],
-      "package": "[Min].controllers",
+      "packageName": "[projectNameMin].controllers",
       "annotations": ["@Controller", "@Singleton"],
       "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/controllers"
     },
@@ -207,7 +207,7 @@
         "import veda.godao.DAO;",
         "import veda.godao.utils.DAOConnexion;"
       ],
-      "package": "[projectNameMin].filters",
+      "packageName": "[projectNameMin].filters",
       "annotations": [],
       "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/controllers"
     },
@@ -227,7 +227,7 @@
         "import io.jsonwebtoken.UnsupportedJwtException;",
         "import jakarta.servlet.http.HttpServletRequest;"
       ],
-      "package": "[projectNameMin].services",
+      "packageName": "[projectNameMin].services",
       "annotations": [],
       "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/services"
     },
@@ -238,11 +238,11 @@
         "import java.sql.PreparedStatement;",
         "import java.sql.ResultSet;",
         "import java.sql.SQLException;",
-        "import [projectNameMin].entities.[authClassNameMaj];",
+        "import [projectNameMin].entities.[authClassMaj];",
         "import [projectNameMin].exception.AuthException;",
         "import veda.godao.annotations.Table;"
       ],
-      "package": "[projectNameMin].services",
+      "packageName": "[projectNameMin].services",
       "savePath": "[projectNameMaj]/[projectApiName]/src/[projectNameMin]/services"
     },
     "customChanges": [],

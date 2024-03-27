@@ -4,18 +4,18 @@
 
 // TODO: ahoana ilay resaka dé hashage mdp ? d am INSERT koa
 public class AuthService {
-    public Auth authenticate(Auth auth, Connection connection) throws SQLException, AuthException {
+    public [authClassMaj] authenticate([authClassMaj] auth, Connection connection) throws SQLException, AuthException {
         String req = "select [pseudoFieldMin], [mdpFieldMin] from " + this.getClass().getAnnotation(Table.class).value()
                 + " where [pseudoFieldMin] = ? and [mdpFieldMin] = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(req);
         preparedStatement.setString(1, auth.get[pseudoFieldMaj]());
-        preparedStatement.setString(2, auth.get[MdpFieldMaj]());
+        preparedStatement.setString(2, auth.get[mdpFieldMaj]());
 
         ResultSet r = preparedStatement.executeQuery();
         while (r.next()) {
-            Auth a = new Auth();
+            [authClassMaj] a = new [authClassMaj]();
             a.set[pseudoFieldMaj](r.getString(1));
-            a.set[MdpFieldMaj](r.getString(2));
+            a.set[mdpFieldMaj](r.getString(2));
             return a;
         }
         throw new AuthException("Invalid credentials. Please try again.");
