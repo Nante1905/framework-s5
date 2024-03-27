@@ -22,6 +22,15 @@ public class Entity {
         setTableName(tableName);
     }
 
+    public boolean hasColumn(String columnName) {
+        for (EntityColumn c : columns) {
+            if (c.getName().toLowerCase().equals(columnName.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object e) {
         System.out.println(this.getTableName());
@@ -48,7 +57,7 @@ public class Entity {
         return columns;
     }
 
-    public void setColumns(EntityColumn[] columns) {
+    public void setColumns(EntityColumn... columns) {
         this.columns = columns;
     }
 

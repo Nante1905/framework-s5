@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
+import exceptions.EntityNotFoundException;
+import exceptions.MissingColumnException;
 import genesis.frontend.FrontGeneration;
 import genesis.frontend.variables.FrontLangage;
 import genesis.frontend.variables.FrontPage;
@@ -26,6 +28,8 @@ public class Project {
         Database database;
         Language language;
         FrontLangage frontLangage;
+        // String databaseName = "akanjo", user = "postgres", pwd = "2003", host =
+        // "localhost", port = "5432";
         String databaseName, user, pwd, host, port;
         boolean useSSL = false, allowPublicKeyRetrieval = true;
         String entityName = "";
@@ -46,19 +50,17 @@ public class Project {
         int frontLangageNum = 0;
         Preference preference = new Preference();
         File preferenceFile;
+
+        // AUTHENTIFICATION VARIABLE
+        String authClassName = null;
+        String authPseudoName = null;
+        String authPwdName = null;
+        Entity authEntity = null;
+        boolean addAuth = false;
+
         // boolean addEntity = false;
         HashMap<String, String> pageInfoItems = new HashMap<String, String>();
         try (Scanner scanner = new Scanner(System.in)) {
-            // add entity or generate new project
-            // System.out.println("""
-            // How can I help you ?
-            // 1) Generate new project
-            // 2) Add entity to existing project
-            // > """);
-            // addEntity = scanner.nextInt() == 2;
-
-            // System.out.print("Enter your project name: ");
-            // projectName = scanner.next();
             project = new File(Constantes.CURRENT_DIR + projectName);
             credentialFile = new File(Constantes.CURRENT_DIR + projectName + "/database-credentials.json");
             preferenceFile = new File(Constantes.CURRENT_DIR + projectName + "/preference.json");
@@ -126,8 +128,44 @@ public class Project {
                     System.out.println("Connection successfully established.");
                 } catch (Exception e) {
                     System.out.println("Cannot establish connection with the database.");
+                    System.out.println(e.getMessage());
+                    return;
                 }
-                System.out.print("Which entities to import ?(* to select all): ");
+
+                // AUTHENTIFICATION
+                if (entityAdd.equals("") == true) {
+                    System.out.println("Do you want to add authentification ? (y/n):");
+                    addAuth = scanner.next().toLowerCase().equals("y");
+                    if (addAuth == true) {
+                        System.out.print(
+                                "Enter the table's name for the authentification (it will be created if it doesn't exist yet)\n> ");
+                        authClassName = scanner.next();
+                        System.out.print("Enter the name of column to use as username: ");
+                        authPseudoName = scanner.next();
+                        System.out.print("Enter the name of column to use as password: ");
+                        authPwdName = scanner.next();
+                        Connection connect = database.getConnexion(credentials);
+                        try {
+                            authEntity = database.verifyAuthTable(connect, credentials, authClassName, authPseudoName,
+                                    authPwdName,
+                                    language);
+
+                        } catch (MissingColumnException e) {
+                            System.out.println(e.getMessage());
+                            return;
+                        } catch (EntityNotFoundException e) {
+                            System.out.println("Creation of " + authClassName);
+                            Entity toCreate = AuthGenerationTmp.setAuthInformation(authClassName, authPseudoName,
+                                    authPwdName, database);
+                            authEntity = database.createTable(connect, credentials, toCreate);
+                            authEntity.initialize(connect, credentials, database, language);
+                        } catch (Exception e) {
+                            throw e;
+                        }
+                    }
+                }
+
+                System.out.print("Which entity to import ?(* to select all): ");
                 entityName = scanner.next();
                 System.out.println("Which langage do you want to use for your frontEnd application ?");
                 for (int i = 0; i < frontLangages.length; i++) {
@@ -214,6 +252,14 @@ public class Project {
             }
             try (Connection connect = database.getConnexion(credentials)) {
                 entities = database.getEntities(connect, credentials, entityName);
+                // AUTHENTIFICATION: add entity to entities-List if it's generation of new
+                // Project
+                if (addAuth && entityName.equals("*") == false
+                        && entityName.equalsIgnoreCase(authClassName.toLowerCase()) == false) {
+                    System.out.println(authEntity.getTableName());
+                    entities.add(authEntity);
+                }
+
                 String modelContent = "";
                 String controllerContent = "";
                 try (Scanner sc = new Scanner(System.in)) {

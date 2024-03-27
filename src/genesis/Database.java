@@ -5,9 +5,13 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import exceptions.EntityNotFoundException;
+import exceptions.MissingColumnException;
 
 public class Database {
     private int id;
@@ -18,6 +22,7 @@ public class Database {
     private String getcolumnsQuery;
     private String gettablesQuery;
     private String singleTableQuery;
+    private HashMap<String, String> columnType;
 
     public int getId() {
         return id;
@@ -86,8 +91,56 @@ public class Database {
         return connex;
     }
 
+    public Entity verifyAuthTable(Connection conn, Credentials credentials, String tableName, String pseudoName,
+            String pwdName, Language language) throws Exception {
+        try {
+            Entity e = getEntities(conn, credentials, tableName).get(0);
+            e.initialize(conn, credentials, this, language);
+            String errorMessage = "";
+            if (e.hasColumn(pseudoName) == false) {
+                errorMessage += "Column " + pseudoName + " doesn't exist in " + tableName + ".\n";
+            }
+            if (e.hasColumn(pwdName) == false) {
+                errorMessage += "Column " + pwdName + " doesn't exist in " + tableName + ".";
+            }
+            if (errorMessage.equals("")) {
+                return e;
+            }
+            throw new MissingColumnException(errorMessage);
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (ClassNotFoundException | SQLException e) {
+            throw e;
+        }
+    }
+
+    public Entity createTable(Connection conn, Credentials credentials, Entity entity) throws Exception {
+        String query = " CREATE TABLE IF NOT EXISTS  " + entity.getTableName() + " ( ";
+        for (EntityColumn c : entity.getColumns()) {
+            query += c.getName() + " " + c.getType() + " ";
+            if (c.isPrimary()) {
+                query += " PRIMARY KEY";
+            }
+            query += ",";
+        }
+        query = query.substring(0, query.length() - 1);
+        query += " )";
+        System.out.println(query);
+        Statement statement = conn.createStatement();
+        statement.executeUpdate(query);
+        conn.commit();
+        statement.close();
+
+        // get Entity information
+        try {
+            return getEntities(conn, credentials, entity.getTableName()).get(0);
+        } catch (EntityNotFoundException e) {
+            throw new Exception("Cannot create table " + entity.getTableName());
+        }
+    }
+
     public List<Entity> getEntities(Connection connex, Credentials credentials, String entityName)
-            throws ClassNotFoundException, SQLException {
+            throws ClassNotFoundException, SQLException, EntityNotFoundException {
         boolean opened = false;
         Connection connect = connex;
         if (connect == null) {
@@ -111,6 +164,9 @@ public class Database {
                     liste.add(entity);
                 }
             }
+            if (liste.size() == 0) {
+                throw new EntityNotFoundException(entityName + " not found in your database ");
+            }
             return liste;
         } finally {
             statement.close();
@@ -126,5 +182,13 @@ public class Database {
 
     public void setSingleTableQuery(String singleTableQuery) {
         this.singleTableQuery = singleTableQuery;
+    }
+
+    public HashMap<String, String> getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(HashMap<String, String> columnType) {
+        this.columnType = columnType;
     }
 }
